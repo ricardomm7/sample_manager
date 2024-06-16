@@ -2,6 +2,8 @@ package org.sample_manager.Domain;
 
 import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.DTO.SampleMapper;
+import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.ZeroHazardException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ public class SampleRepository implements Serializable {
         sampleList = new ArrayList<>();
     }
 
-    public void createSample(SampleDTO p) {
+    public void createSample(SampleDTO p) throws EmptyStringException, ZeroHazardException {
         Sample s = SampleMapper.toDomain(p);
         boolean b = false;
         while (!b) {

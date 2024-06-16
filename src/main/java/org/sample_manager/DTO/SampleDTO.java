@@ -1,16 +1,16 @@
 package org.sample_manager.DTO;
 
-import org.sample_manager.Domain.Date;
+import java.time.LocalDate;
 
 public class SampleDTO {
     public String barcode;
     public String description;
-    public boolean isDangerous;
-    public Date executionDate;
-    public Date expirationDate;
+    public Boolean isDangerous;
+    public LocalDate executionDate;
+    public LocalDate expirationDate;
     public String labIdentifier;
 
-    public SampleDTO(String description, Boolean isDangerous, Date executionDate, Date expirationDate, String barcode, String labIdentifier) {
+    public SampleDTO(String description, Boolean isDangerous, LocalDate executionDate, LocalDate expirationDate, String barcode, String labIdentifier) {
         this.description = description;
         this.isDangerous = isDangerous;
         this.executionDate = executionDate;
@@ -19,7 +19,7 @@ public class SampleDTO {
         this.labIdentifier = labIdentifier;
     }
 
-    public SampleDTO(String description, Boolean isDangerous, Date executionDate, Date expirationDate) {
+    public SampleDTO(String description, Boolean isDangerous, LocalDate executionDate, LocalDate expirationDate) {
         this.description = description;
         this.isDangerous = isDangerous;
         this.executionDate = executionDate;

@@ -2,8 +2,13 @@ package org.sample_manager.Domain;
 
 import org.sample_manager.External.BarcodeGenerator;
 import org.sample_manager.External.PrintJob;
+import org.sample_manager.Util.DangerValidator;
+import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.ZeroHazardException;
+import org.sample_manager.Util.StringValidator;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Random;
 
@@ -11,19 +16,19 @@ public class Sample implements Serializable {
     private String barcode;
     private String description;
     private boolean isDangerous;
-    private Date executionDate;
-    private Date expirationDate;
+    private LocalDate executionDate;
+    private LocalDate expirationDate;
     private String labIdentifier;
 
 
-    public Sample(String description, Boolean isDangerous, Date executionDate, Date expirationDate) {
+    public Sample(String description, Boolean isDangerous, LocalDate executionDate, LocalDate expirationDate) throws EmptyStringException, ZeroHazardException {
         generateBarcode();
-        this.description = description;
-        this.isDangerous = isDangerous;
+        setDescription(description);
+        setDangerous(isDangerous);
         setDates(executionDate, expirationDate);
     }
 
-    private void setDates(Date executionDate, Date expirationDate) {
+    private void setDates(LocalDate executionDate, LocalDate expirationDate) {
         if (!executionDate.isAfter(expirationDate)) {
             this.executionDate = executionDate;
             this.expirationDate = expirationDate;
@@ -59,7 +64,8 @@ public class Sample implements Serializable {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description) throws EmptyStringException {
+        StringValidator.validateNotEmpty(description, "Description");
         this.description = description;
     }
 
@@ -67,15 +73,15 @@ public class Sample implements Serializable {
         return isDangerous;
     }
 
-    public void setDangerous(boolean dangerous) {
-        isDangerous = dangerous;
+    public void setDangerous(Boolean dangerous) throws ZeroHazardException {
+        DangerValidator.validateNotEmpty(dangerous, "Danger");
     }
 
-    public Date getExecutionDate() {
+    public LocalDate getExecutionDate() {
         return executionDate;
     }
 
-    public Date getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
@@ -91,11 +97,11 @@ public class Sample implements Serializable {
         this.labIdentifier = labIdentifier;
     }
 
-    public void setExecutionDate(Date executionDate) {
+    public void setExecutionDate(LocalDate executionDate) {
         this.executionDate = executionDate;
     }
 
-    public void setExpirationDate(Date expirationDate) {
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 

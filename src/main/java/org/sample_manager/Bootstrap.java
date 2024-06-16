@@ -1,11 +1,13 @@
 package org.sample_manager;
 
 import org.sample_manager.Controller.SampleController;
-import org.sample_manager.Domain.Date;
 import org.sample_manager.Domain.Repositories;
 import org.sample_manager.GUI.Alert;
+import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.ZeroHazardException;
 
 import java.io.*;
+import java.time.LocalDate;
 
 public class Bootstrap implements Runnable {
     public void serializeAll() {
@@ -40,11 +42,15 @@ public class Bootstrap implements Runnable {
 
     @Override
     public void run() {
-        addSampleSamples();
+        try {
+            addSampleSamples();
+        } catch (EmptyStringException | ZeroHazardException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void addSampleSamples() {
+    private void addSampleSamples() throws EmptyStringException, ZeroHazardException {
         SampleController c1 = new SampleController();
-        c1.create("Alcohol", false, new Date(2024, 06, 13), new Date(2029, 05, 20));
+        c1.create("Alcohol", false, LocalDate.of(2024, 06, 13), LocalDate.of(2029, 05, 20));
     }
 }
