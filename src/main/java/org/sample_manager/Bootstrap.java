@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class Bootstrap implements Runnable {
     public void serializeAll() {
         try {
-            FileOutputStream fileOut = new FileOutputStream("serial/s4ft66ys.smfile");
+            FileOutputStream fileOut = new FileOutputStream("s4ft66ys.smfile");
             ObjectOutputStream outStream = new ObjectOutputStream(fileOut);
             outStream.writeObject(Repositories.getInstance());
             outStream.close();
@@ -27,7 +27,7 @@ public class Bootstrap implements Runnable {
      */
     public void deserializeAll() {
         try {
-            FileInputStream fileIn = new FileInputStream("serial/s4ft66ys.smfile");
+            FileInputStream fileIn = new FileInputStream("s4ft66ys.smfile");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             Repositories instance = (Repositories) in.readObject();
             Repositories.setInstance(instance);
