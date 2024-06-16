@@ -1,6 +1,6 @@
-# Sample Manager
+# Sample Manager (temporary name)
 
-Sample Manager is a Java program designed to streamline the cataloging process of samples stored in refrigerators (or not), with built-in barcode generation for efficient tracking.
+Sample Manager (temporary name) is a Java program designed to streamline the cataloging process of samples stored in refrigerators (or not), with built-in barcode generation for efficient tracking.
 
 ## Features
 
