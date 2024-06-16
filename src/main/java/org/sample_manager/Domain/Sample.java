@@ -1,6 +1,10 @@
-package org.sample_manager;
+package org.sample_manager.Domain;
+
+import org.sample_manager.External.BarcodeGenerator;
+import org.sample_manager.External.PrintJob;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Random;
 
 public class Sample implements Serializable {
@@ -9,7 +13,7 @@ public class Sample implements Serializable {
     private boolean isDangerous;
     private Date executionDate;
     private Date expirationDate;
-    public static String labIdentifier;
+    private String labIdentifier;
 
 
     public Sample(String description, Boolean isDangerous, Date executionDate, Date expirationDate) {
@@ -24,7 +28,7 @@ public class Sample implements Serializable {
             this.executionDate = executionDate;
             this.expirationDate = expirationDate;
         } else {
-            System.out.println("The expiration date must be after the execution date.");
+            throw new IllegalArgumentException("The expiration date must be after the execution date.");
         }
     }
 
@@ -44,7 +48,7 @@ public class Sample implements Serializable {
 
     private void runAndPrint() {
         BarcodeGenerator.execute(this.barcode);
-        Print.execute(); //MISSING the implementation of the print part
+        PrintJob.execute(); //MISSING the implementation of the print part
     }
 
     public String getBarcode() {
@@ -75,6 +79,18 @@ public class Sample implements Serializable {
         return expirationDate;
     }
 
+    public String getLabIdentifier() {
+        return labIdentifier;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setLabIdentifier(String labIdentifier) {
+        this.labIdentifier = labIdentifier;
+    }
+
     public void setExecutionDate(Date executionDate) {
         this.executionDate = executionDate;
     }
@@ -83,5 +99,17 @@ public class Sample implements Serializable {
         this.expirationDate = expirationDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Sample sample = (Sample) o;
+        return barcode.equalsIgnoreCase(sample.barcode);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(barcode);
+    }
 }
 

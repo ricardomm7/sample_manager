@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.sample_manager.HelloController">
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<VBox spacing="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8"
+      fx:controller="org.sample_manager.GUI.HelloController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20" left="20" right="20" top="20"/>
     </padding>
+    <children>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+        <!-- Search Bar -->
+        <HBox spacing="10">
+            <children>
+                <TextField fx:id="searchField" promptText="Search samples..."/>
+                <Button onAction="#onSearchButtonClick" text="Search"/>
+            </children>
+        </HBox>
+
+        <!-- List of Samples -->
+        <ListView fx:id="sampleListView" VBox.vgrow="ALWAYS"/>
+    </children>
 </VBox>

@@ -1,4 +1,7 @@
-package org.sample_manager;
+package org.sample_manager.Domain;
+
+import org.sample_manager.DTO.SampleDTO;
+import org.sample_manager.DTO.SampleMapper;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,11 +14,11 @@ public class SampleRepository implements Serializable {
         sampleList = new ArrayList<>();
     }
 
-    public void createSample(String description, Boolean isDangerous, Date execution, Date expiration) {
-        Sample s = new Sample(description, isDangerous, execution, expiration);
+    public void createSample(SampleDTO p) {
+        Sample s = SampleMapper.toDomain(p);
         boolean b = false;
         while (!b) {
-            if (checkForDuplicateCode(s.getBarcode())) {
+            if (!checkForDuplicateCode(s.getBarcode())) {
                 addSample(s);
                 b = true;
             } else {
@@ -27,18 +30,14 @@ public class SampleRepository implements Serializable {
     public Boolean checkForDuplicateCode(String s) {
         for (Sample r : sampleList) {
             if (s.equals(r.getBarcode())) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void addSample(Sample s) {
         sampleList.add(s);
-    }
-
-    public void setLabIdentifier(String id) {
-        Sample.labIdentifier = id;
     }
 
     public List<Sample> getSampleList() {
