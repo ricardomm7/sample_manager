@@ -3,6 +3,7 @@ package org.sample_manager;
 import org.sample_manager.Controller.SampleController;
 import org.sample_manager.Domain.Date;
 import org.sample_manager.Domain.Repositories;
+import org.sample_manager.GUI.Alert;
 
 import java.io.*;
 
@@ -15,8 +16,7 @@ public class Bootstrap implements Runnable {
             outStream.close();
             fileOut.close();
         } catch (IOException i) {
-            System.out.println("Error saving all the data " + i.getMessage());
-            i.printStackTrace();
+            Alert.error("Error", i.getMessage(), "Error saving all the data");
         }
     }
 
@@ -34,7 +34,7 @@ public class Bootstrap implements Runnable {
         } catch (FileNotFoundException e) {
             Repositories.setInstance(new Repositories());
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("Error loading all the data " + e.getMessage());
+            Alert.error("Error", e.getMessage(), "Error loading all the data");
         }
     }
 
