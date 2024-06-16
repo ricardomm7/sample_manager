@@ -15,7 +15,7 @@ import java.util.Random;
 public class Sample implements Serializable {
     private String barcode;
     private String description;
-    private boolean isDangerous;
+    private Boolean isDangerous;
     private LocalDate executionDate;
     private LocalDate expirationDate;
     private String labIdentifier;
@@ -75,6 +75,7 @@ public class Sample implements Serializable {
 
     public void setDangerous(Boolean dangerous) throws ZeroHazardException {
         DangerValidator.validateNotEmpty(dangerous, "Danger");
+        this.isDangerous = dangerous;
     }
 
     public LocalDate getExecutionDate() {
