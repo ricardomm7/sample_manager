@@ -3,6 +3,7 @@ package org.sample_manager.Controller;
 import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.DTO.SampleMapper;
 import org.sample_manager.Domain.Repositories;
+import org.sample_manager.Domain.Sample;
 import org.sample_manager.Domain.SampleRepository;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.ZeroHazardException;
@@ -21,7 +22,8 @@ public class SampleController {
         sampleRepository.createSample(new SampleDTO(description, isDangerous, execution, expiration));
     }
 
-    public void remove(SampleDTO s) {
+    public void remove(SampleDTO s) throws EmptyStringException, ZeroHazardException {
+        sampleRepository.removeSample(SampleMapper.toDomain(s));
     }
 
     public List<SampleDTO> getAllSamples() {

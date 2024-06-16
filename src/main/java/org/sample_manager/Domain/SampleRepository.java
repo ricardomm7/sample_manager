@@ -42,6 +42,15 @@ public class SampleRepository implements Serializable {
         sampleList.add(s);
     }
 
+    public void removeSample(Sample f) {
+        for (Sample s : sampleList) {
+            if (s.getBarcode().equalsIgnoreCase(f.getBarcode()) && s.getDescription().equalsIgnoreCase(f.getDescription())) {
+                sampleList.remove(s);
+                return;
+            }
+        }
+    }
+
     public List<Sample> getSampleList() {
         return new ArrayList<>(sampleList);
     }

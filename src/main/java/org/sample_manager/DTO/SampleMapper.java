@@ -15,7 +15,7 @@ public class SampleMapper {
 
     public static Sample toDomain(SampleDTO i) throws EmptyStringException, ZeroHazardException {
         Sample s1 = new Sample(i.description, i.isDangerous, i.executionDate, i.expirationDate);
-        if (i.barcode != null && i.labIdentifier != null) {
+        if (i.barcode != null) {
             s1.setBarcode(i.barcode);
             s1.setLabIdentifier(i.labIdentifier);
         }

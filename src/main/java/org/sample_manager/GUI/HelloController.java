@@ -1,5 +1,6 @@
 package org.sample_manager.GUI;
 
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -29,6 +30,7 @@ public class HelloController {
     @FXML
     public void initialize() {
         updateListView();
+        removeBtn.visibleProperty().bind(Bindings.isNotEmpty(sampleListView.getSelectionModel().getSelectedItems()));
     }
 
     @FXML
@@ -44,7 +46,6 @@ public class HelloController {
         grid.setVgap(10);
 
         TextField descriptionField = new TextField();
-        descriptionField.setPromptText("Description");
 
         ChoiceBox<Boolean> isDangerousField = new ChoiceBox<>();
         isDangerousField.getItems().addAll(true, false);
@@ -90,8 +91,20 @@ public class HelloController {
     }
 
     @FXML
-    void removeBtnHandler(ActionEvent event) {
+    void removeBtnHandler(ActionEvent event) throws EmptyStringException, ZeroHazardException {
+        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
+        if (selectedIdx != -1) {
+            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
+            SampleDTO selectedSample = allSamples.stream()
+                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
+                    .findFirst()
+                    .orElse(null);
 
+            if (selectedSample != null) {
+                controller.remove(selectedSample);
+                updateListView();
+            }
+        }
     }
 
     @FXML
