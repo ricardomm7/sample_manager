@@ -1,68 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.input.*?>
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
-<VBox prefHeight="611.0" prefWidth="895.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.sample_manager.GUI.HelloController">
-   <children>
-      <MenuBar>
-        <menus>
-          <Menu mnemonicParsing="false" text="Archive">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#createBtnHandler" text="New sample" />
-                  <MenuItem mnemonicParsing="false" text="New identificator" />
-                  <MenuItem mnemonicParsing="false" onAction="#closeHandler" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-                  <MenuItem fx:id="propertiesMenuItem" disable="true" mnemonicParsing="false" text="Properties" />
-                  <MenuItem fx:id="printBarcMenuItem" disable="true" mnemonicParsing="false" text="Print barcode" />
-              <MenuItem fx:id="removeMenuItem" disable="true" mnemonicParsing="false" onAction="#removeBtnHandler" text="Delete" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-                  <MenuItem mnemonicParsing="false" text="Documentation" />
-                  <MenuItem mnemonicParsing="false" onAction="#aboutMenuHandler" text="About" />
-            </items>
-          </Menu>
-        </menus>
-      </MenuBar>
-      <BorderPane VBox.vgrow="ALWAYS">
-         <center>
-            <ListView fx:id="sampleListView" BorderPane.alignment="CENTER" />
-         </center>
-         <top>
-            <HBox style="-fx-background-color: #eeeeee;" BorderPane.alignment="CENTER">
-               <children>
-                  <TextField fx:id="searchField" promptText="Search samples..." HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="10.0" right="4.0" top="8.0" />
-                     </HBox.margin>
-                  </TextField>
-                  <Button onAction="#onSearchButtonClick" text="Search" HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="4.0" right="4.0" top="8.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button onAction="#createBtnHandler" text="Create new" HBox.hgrow="ALWAYS">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="4.0" right="4.0" top="8.0" />
-                     </HBox.margin>
-                  </Button>
-                  <Button fx:id="removeBtn" disable="true" onAction="#removeBtnHandler" text="Remove">
-                     <HBox.margin>
-                        <Insets bottom="8.0" left="4.0" right="10.0" top="8.0" />
-                     </HBox.margin>
-                  </Button>
-               </children>
-            </HBox>
-         </top>
-      </BorderPane>
-   </children>
+<VBox prefHeight="611.0" prefWidth="895.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.sample_manager.GUI.HelloController">
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="Archive">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#createBtnHandler" text="New sample"/>
+                        <MenuItem mnemonicParsing="false" text="New identificator"/>
+                        <MenuItem mnemonicParsing="false" onAction="#closeHandler" text="Close"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Edit">
+                    <items>
+                        <MenuItem fx:id="propertiesMenuItem" disable="true" mnemonicParsing="false" text="Properties"/>
+                        <MenuItem fx:id="printBarcMenuItem" disable="true" mnemonicParsing="false"
+                                  text="Print barcode"/>
+                        <MenuItem fx:id="removeMenuItem" disable="true" mnemonicParsing="false"
+                                  onAction="#removeBtnHandler" text="Delete"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Help">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Documentation"/>
+                        <MenuItem mnemonicParsing="false" onAction="#aboutMenuHandler" text="About"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <BorderPane VBox.vgrow="ALWAYS">
+            <center>
+                <ListView fx:id="sampleListView" BorderPane.alignment="CENTER"/>
+            </center>
+            <top>
+                <HBox style="-fx-background-color: #eeeeee;" BorderPane.alignment="CENTER">
+                    <children>
+                        <TextField fx:id="searchField" promptText="Search samples..." HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="10.0" right="4.0" top="8.0"/>
+                            </HBox.margin>
+                        </TextField>
+                        <Button onAction="#onSearchButtonClick" text="Search" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="4.0" right="4.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <Button onAction="#createBtnHandler" text="Create new" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="4.0" right="4.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                        <Button fx:id="removeBtn" disable="true" onAction="#removeBtnHandler" text="Remove">
+                            <HBox.margin>
+                                <Insets bottom="8.0" left="4.0" right="10.0" top="8.0"/>
+                            </HBox.margin>
+                        </Button>
+                    </children>
+                </HBox>
+            </top>
+        </BorderPane>
+    </children>
 </VBox>
