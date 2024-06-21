@@ -1,5 +1,6 @@
 package org.sample_manager.GUI;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,15 +29,28 @@ public class HelloController {
     private Button removeBtn;
 
     @FXML
+    private MenuItem removeMenuItem;
+
+    @FXML
+    private MenuItem printBarcMenuItem;
+
+    @FXML
+    private MenuItem propertiesMenuItem;
+
+
+    @FXML
     public void initialize() {
         updateListView();
-        removeBtn.visibleProperty().bind(Bindings.isNotEmpty(sampleListView.getSelectionModel().getSelectedItems()));
+        removeBtn.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
+        removeMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
+        printBarcMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
+        propertiesMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
     }
 
     @FXML
     void createBtnHandler(ActionEvent event) {
         Dialog<SampleDTO> dialog = new Dialog<>();
-        dialog.setTitle("Create New Sample");
+        dialog.setTitle("Create sample");
 
         ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
@@ -128,5 +142,15 @@ public class HelloController {
                 .collect(Collectors.toList());
 
         sampleListView.getItems().setAll(sampleList);
+    }
+
+    @FXML
+    void aboutMenuHandler(ActionEvent event) {
+        Alert.information("About", "You're on version v0.1 (Beta), of Sample Manager.\n@ricardomm7", "About Sample Manager");
+    }
+
+    @FXML
+    void closeHandler(ActionEvent event) {
+        Platform.exit();
     }
 }

@@ -3,6 +3,7 @@ module org.sample_manager {
     requires javafx.fxml;
     requires com.google.zxing;
     requires com.google.zxing.javase;
+    requires java.desktop;
 
 
     opens org.sample_manager to javafx.fxml;
