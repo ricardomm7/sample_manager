@@ -1,6 +1,7 @@
 package org.sample_manager.DTO;
 
 import org.sample_manager.Domain.Identifier;
+import org.sample_manager.Util.Exceptions.EmptyStringException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ public class IdentifierMapper {
         return new IdentifierDTO(o.getMainName(), o.getIdPrefixField());
     }
 
-    public static Identifier toDomain(IdentifierDTO i) {
+    public static Identifier toDomain(IdentifierDTO i) throws EmptyStringException {
         Identifier s1 = new Identifier(i.mainName);
         s1.setIdPrefixField(i.idPrefixField);
         return s1;

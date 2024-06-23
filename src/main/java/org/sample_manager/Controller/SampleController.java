@@ -28,5 +28,4 @@ public class SampleController {
     public List<SampleDTO> getAllSamples() {
         return SampleMapper.toDTOList(sampleRepository.getSampleList());
     }
-
 }

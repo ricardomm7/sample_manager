@@ -18,8 +18,7 @@ public class Sample implements Serializable {
     private Boolean isDangerous;
     private LocalDate executionDate;
     private LocalDate expirationDate;
-    private String labIdentifier;
-
+    private String identifier;
 
     public Sample(String description, Boolean isDangerous, LocalDate executionDate, LocalDate expirationDate) throws EmptyStringException, ZeroHazardException {
         generateBarcode();
@@ -30,15 +29,15 @@ public class Sample implements Serializable {
 
     private void setDates(LocalDate executionDate, LocalDate expirationDate) {
         if (!executionDate.isAfter(expirationDate)) {
-            this.executionDate = executionDate;
-            this.expirationDate = expirationDate;
+            setExecutionDate(executionDate);
+            setExpirationDate(expirationDate);
         } else {
             throw new IllegalArgumentException("The expiration date must be after the execution date.");
         }
     }
 
     public void generateBarcode() {
-        this.barcode = labIdentifier + generateRandomNumericString();
+        this.barcode = identifier + generateRandomNumericString();
         runAndPrint();
     }
 
@@ -86,16 +85,16 @@ public class Sample implements Serializable {
         return expirationDate;
     }
 
-    public String getLabIdentifier() {
-        return labIdentifier;
+    public String getIdentifier() {
+        return identifier;
     }
 
     public void setBarcode(String barcode) {
         this.barcode = barcode;
     }
 
-    public void setLabIdentifier(String labIdentifier) {
-        this.labIdentifier = labIdentifier;
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     public void setExecutionDate(LocalDate executionDate) {
@@ -110,8 +109,8 @@ public class Sample implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Sample sample = (Sample) o;
-        return barcode.equalsIgnoreCase(sample.barcode);
+        Sample other = (Sample) o;
+        return barcode.equalsIgnoreCase(other.barcode);
     }
 
     @Override

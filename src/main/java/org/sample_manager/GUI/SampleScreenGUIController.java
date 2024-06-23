@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HelloController {
+public class SampleScreenGUIController {
     private final SampleController controller = new SampleController();
     private List<SampleDTO> allSamples;
     @FXML
