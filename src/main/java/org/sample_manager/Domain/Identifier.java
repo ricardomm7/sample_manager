@@ -1,6 +1,7 @@
 package org.sample_manager.Domain;
 
 import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.SymbolsStringException;
 import org.sample_manager.Util.StringValidator;
 
 import java.io.Serializable;
@@ -10,12 +11,13 @@ public class Identifier implements Serializable {
     private String mainName;
     private String idPrefixField;
 
-    public Identifier(String mainName) throws EmptyStringException {
+    public Identifier(String mainName) throws EmptyStringException, SymbolsStringException {
         setName(mainName);
     }
 
-    private void setName(String mainName) throws EmptyStringException {
+    private void setName(String mainName) throws EmptyStringException, SymbolsStringException {
         StringValidator.validateNotEmpty(mainName, "The identificator main name");
+        StringValidator.validateSymbols(mainName, "The identificator main name");
         this.mainName = mainName;
         this.idPrefixField = mainName.toLowerCase().trim();
     }

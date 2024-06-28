@@ -11,7 +11,7 @@
                 <Menu mnemonicParsing="false" text="Archive">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#createBtnHandler" text="New sample"/>
-                        <MenuItem mnemonicParsing="false" text="New identifier"/>
+                        <MenuItem mnemonicParsing="false" onAction="#createIdHandler" text="New identifier"/>
                         <MenuItem mnemonicParsing="false" onAction="#closeHandler" text="Close"/>
                     </items>
                 </Menu>

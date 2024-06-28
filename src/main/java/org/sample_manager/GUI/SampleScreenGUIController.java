@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import org.sample_manager.Controller.SampleController;
+import org.sample_manager.DTO.IdentifierDTO;
 import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.ZeroHazardException;
@@ -103,6 +104,56 @@ public class SampleScreenGUIController {
 
         dialog.showAndWait().ifPresent(sampleDTO -> updateListView());
     }
+
+    @FXML
+    void createIdHandler(ActionEvent event) {
+        Dialog<IdentifierDTO> dialog = new Dialog<>();
+        dialog.setTitle("Create identifier");
+
+        ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        TextField name = new TextField();
+        Label descriptionLabel = new Label();
+        descriptionLabel.setStyle("-fx-font-weight: bold;"); // Set the text to be bold
+
+        // Add ChangeListener to update label in real-time and enforce 20 character limit
+        name.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.length() > 20) {
+                name.setText(oldValue); // Prevent input beyond 20 characters
+            } else {
+                descriptionLabel.setText(newValue.toLowerCase().trim());
+            }
+        });
+
+        grid.add(new Label("Name:"), 0, 0);
+        grid.add(name, 1, 0);
+        grid.add(new Label("Code Prefix:"), 0, 1);
+        grid.add(descriptionLabel, 1, 1); // Add the label below the text field
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(new Callback<ButtonType, IdentifierDTO>() {
+            @Override
+            public IdentifierDTO call(ButtonType dialogButton) {
+                if (dialogButton == createButtonType) {
+                    String description = name.getText();
+
+                    // Create the new identifier and return
+                    IdentifierDTO id = new IdentifierDTO(description, description.toLowerCase().trim());
+                    return id;
+                }
+                return null;
+            }
+        });
+
+        dialog.showAndWait().ifPresent(identifierDTO -> updateListView());
+    }
+
 
     @FXML
     void removeBtnHandler(ActionEvent event) throws EmptyStringException, ZeroHazardException {
