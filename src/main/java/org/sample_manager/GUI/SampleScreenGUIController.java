@@ -144,7 +144,7 @@ public class SampleScreenGUIController {
                     String description = name.getText();
 
                     // Create the new identifier and return
-                    IdentifierDTO id = new IdentifierDTO(description, description.toLowerCase().trim());
+                    IdentifierDTO id = new IdentifierDTO(description);
                     return id;
                 }
                 return null;

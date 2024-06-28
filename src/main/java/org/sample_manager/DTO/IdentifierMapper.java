@@ -10,7 +10,7 @@ import java.util.List;
 public class IdentifierMapper {
 
     public static IdentifierDTO toDTO(Identifier o) {
-        return new IdentifierDTO(o.getMainName(), o.getIdPrefixField());
+        return new IdentifierDTO(o.getMainName());
     }
 
     public static Identifier toDomain(IdentifierDTO i) throws EmptyStringException, SymbolsStringException {
@@ -22,7 +22,7 @@ public class IdentifierMapper {
     public static List<IdentifierDTO> toDTOList(List<Identifier> i) {
         List<IdentifierDTO> z = new ArrayList<>();
         for (Identifier y : i) {
-            z.add(new IdentifierDTO(y.getMainName(), y.getIdPrefixField()));
+            z.add(new IdentifierDTO(y.getMainName()));
         }
         return z;
     }

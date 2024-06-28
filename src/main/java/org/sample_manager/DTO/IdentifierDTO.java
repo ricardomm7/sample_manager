@@ -4,7 +4,7 @@ public class IdentifierDTO {
     public String mainName;
     public String idPrefixField;
 
-    public IdentifierDTO(String mainName, String idPrefixField) {
+    public IdentifierDTO(String mainName) {
         this.idPrefixField = mainName.toLowerCase().trim();
         this.mainName = mainName;
     }
