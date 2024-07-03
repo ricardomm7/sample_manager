@@ -71,7 +71,7 @@ public class SampleScreenGUIController {
 
         grid.add(new Label("Description:"), 0, 0);
         grid.add(descriptionField, 1, 0);
-        grid.add(new Label("Is Dangerous:"), 0, 1);
+        grid.add(new Label("Hazard Type:"), 0, 1);
         grid.add(isDangerousField, 1, 1);
         grid.add(new Label("Execution Date:"), 0, 2);
         grid.add(executionDatePicker, 1, 2);

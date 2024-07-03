@@ -1,6 +1,8 @@
 package org.sample_manager.Domain;
 
-public enum HazardTypes {
+import java.io.Serializable;
+
+public enum HazardTypes implements Serializable {
     NONE {
         @Override
         public String toString() {
@@ -25,22 +27,34 @@ public enum HazardTypes {
             return "Biological Hazard";
         }
     },
-    ERGONOMIC {
+    FLAMMABLE {
         @Override
         public String toString() {
-            return "Ergonomic Hazard";
+            return "Flammable";
         }
     },
-    PSYCHOSOCIAL {
+    TOXIC {
         @Override
         public String toString() {
-            return "Psychosocial Hazard";
+            return "Toxic";
         }
     },
     RADIATION {
         @Override
         public String toString() {
             return "Radiation Hazard";
+        }
+    },
+    GAS {
+        @Override
+        public String toString() {
+            return "Toxic Gases";
+        }
+    },
+    PATHOGENS {
+        @Override
+        public String toString() {
+            return "Pathogens (Bacteria, Viruses, Fungi)";
         }
     };
 
