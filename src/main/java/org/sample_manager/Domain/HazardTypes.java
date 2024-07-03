@@ -1,6 +1,12 @@
 package org.sample_manager.Domain;
 
 public enum HazardTypes {
+    NONE {
+        @Override
+        public String toString() {
+            return "None";
+        }
+    },
     CHEMICAL {
         @Override
         public String toString() {

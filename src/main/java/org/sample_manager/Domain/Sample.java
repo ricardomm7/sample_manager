@@ -2,9 +2,7 @@ package org.sample_manager.Domain;
 
 import org.sample_manager.External.BarcodeGenerator;
 import org.sample_manager.External.PrintJob;
-import org.sample_manager.Util.DangerValidator;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
-import org.sample_manager.Util.Exceptions.ZeroHazardException;
 import org.sample_manager.Util.StringValidator;
 
 import java.io.Serializable;
@@ -15,15 +13,15 @@ import java.util.Random;
 public class Sample implements Serializable {
     private String barcode;
     private String description;
-    private Boolean isDangerous;
+    private HazardTypes hazard;
     private LocalDate executionDate;
     private LocalDate expirationDate;
     private String identifier;
 
-    public Sample(String description, Boolean isDangerous, LocalDate executionDate, LocalDate expirationDate) throws EmptyStringException, ZeroHazardException {
+    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate) throws EmptyStringException {
         generateBarcode();
         setDescription(description);
-        setDangerous(isDangerous);
+        setDangerous(hazard);
         setDates(executionDate, expirationDate);
     }
 
@@ -68,13 +66,12 @@ public class Sample implements Serializable {
         this.description = description;
     }
 
-    public boolean isDangerous() {
-        return isDangerous;
+    public HazardTypes isDangerous() {
+        return hazard;
     }
 
-    public void setDangerous(Boolean dangerous) throws ZeroHazardException {
-        DangerValidator.validateNotEmpty(dangerous, "Danger");
-        this.isDangerous = dangerous;
+    public void setDangerous(HazardTypes dangerous) {
+        this.hazard = dangerous;
     }
 
     public LocalDate getExecutionDate() {

@@ -1,10 +1,10 @@
 package org.sample_manager;
 
 import org.sample_manager.Controller.SampleController;
+import org.sample_manager.Domain.HazardTypes;
 import org.sample_manager.Domain.Repositories;
 import org.sample_manager.GUI.Alert;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
-import org.sample_manager.Util.Exceptions.ZeroHazardException;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -44,13 +44,13 @@ public class Bootstrap implements Runnable {
     public void run() {
         try {
             addSampleSamples();
-        } catch (EmptyStringException | ZeroHazardException e) {
+        } catch (EmptyStringException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void addSampleSamples() throws EmptyStringException, ZeroHazardException {
+    private void addSampleSamples() throws EmptyStringException {
         SampleController c1 = new SampleController();
-        c1.create("Alcohol", false, LocalDate.of(2024, 06, 13), LocalDate.of(2029, 05, 20));
+        c1.create("Alcohol", HazardTypes.BIOLOGICAL, LocalDate.of(2024, 06, 13), LocalDate.of(2029, 05, 20));
     }
 }

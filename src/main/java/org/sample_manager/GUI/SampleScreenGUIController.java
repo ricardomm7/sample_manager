@@ -10,8 +10,8 @@ import javafx.util.Callback;
 import org.sample_manager.Controller.SampleController;
 import org.sample_manager.DTO.IdentifierDTO;
 import org.sample_manager.DTO.SampleDTO;
+import org.sample_manager.Domain.HazardTypes;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
-import org.sample_manager.Util.Exceptions.ZeroHazardException;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -62,9 +62,9 @@ public class SampleScreenGUIController {
 
         TextField descriptionField = new TextField();
 
-        ChoiceBox<Boolean> isDangerousField = new ChoiceBox<>();
-        isDangerousField.getItems().addAll(true, false);
-        isDangerousField.setValue(false);
+        ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
+        isDangerousField.getItems().addAll(HazardTypes.values());
+        isDangerousField.setValue(HazardTypes.NONE);
 
         DatePicker executionDatePicker = new DatePicker();
         DatePicker expirationDatePicker = new DatePicker();
@@ -85,7 +85,7 @@ public class SampleScreenGUIController {
             public SampleDTO call(ButtonType dialogButton) {
                 if (dialogButton == createButtonType) {
                     String description = descriptionField.getText();
-                    Boolean isDangerous = isDangerousField.getValue();
+                    HazardTypes isDangerous = isDangerousField.getValue();
                     LocalDate executionDate = executionDatePicker.getValue();
                     LocalDate expirationDate = expirationDatePicker.getValue();
 
@@ -93,7 +93,7 @@ public class SampleScreenGUIController {
                     SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate);
                     try {
                         controller.create(newSample.description, newSample.isDangerous, newSample.executionDate, newSample.expirationDate);
-                    } catch (EmptyStringException | ZeroHazardException e) {
+                    } catch (EmptyStringException e) {
                         throw new RuntimeException(e);
                     }
                     return newSample;
@@ -156,7 +156,7 @@ public class SampleScreenGUIController {
 
 
     @FXML
-    void removeBtnHandler(ActionEvent event) throws EmptyStringException, ZeroHazardException {
+    void removeBtnHandler(ActionEvent event) throws EmptyStringException {
         int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();

@@ -2,7 +2,6 @@ package org.sample_manager.DTO;
 
 import org.sample_manager.Domain.Sample;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
-import org.sample_manager.Util.Exceptions.ZeroHazardException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +12,7 @@ public class SampleMapper {
         return new SampleDTO(o.getDescription(), o.isDangerous(), o.getExecutionDate(), o.getExpirationDate(), o.getBarcode(), o.getIdentifier());
     }
 
-    public static Sample toDomain(SampleDTO i) throws EmptyStringException, ZeroHazardException {
+    public static Sample toDomain(SampleDTO i) throws EmptyStringException {
         Sample s1 = new Sample(i.description, i.isDangerous, i.executionDate, i.expirationDate);
         if (i.barcode != null) {
             s1.setBarcode(i.barcode);
