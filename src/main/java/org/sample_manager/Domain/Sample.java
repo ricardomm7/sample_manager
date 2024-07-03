@@ -50,7 +50,7 @@ public class Sample implements Serializable {
 
     private void runAndPrint() {
         BarcodeGenerator.execute(this.barcode);
-        PrintJob.execute(); //MISSING the implementation of the print part
+        PrintJob.execute();
     }
 
     public String getBarcode() {
