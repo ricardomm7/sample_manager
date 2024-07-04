@@ -19,7 +19,7 @@
                     <items>
                         <MenuItem fx:id="propertiesMenuItem" disable="true" mnemonicParsing="false" text="Properties"/>
                         <MenuItem fx:id="printBarcMenuItem" disable="true" mnemonicParsing="false"
-                                  text="Print barcode"/>
+                                  onAction="#printBarcHandler" text="Print barcode"/>
                         <MenuItem fx:id="removeMenuItem" disable="true" mnemonicParsing="false"
                                   onAction="#removeBtnHandler" text="Delete"/>
                     </items>

@@ -50,6 +50,10 @@ public class SampleRepository implements Serializable {
         }
     }
 
+    public void printBarcode(Sample f) {
+        f.printBarcode();
+    }
+
     public List<Sample> getSampleList() {
         return new ArrayList<>(sampleList);
     }

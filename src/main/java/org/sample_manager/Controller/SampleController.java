@@ -28,4 +28,8 @@ public class SampleController {
     public List<SampleDTO> getAllSamples() {
         return SampleMapper.toDTOList(sampleRepository.getSampleList());
     }
+
+    public void printBarc(SampleDTO selectedSample) throws EmptyStringException {
+        sampleRepository.printBarcode(SampleMapper.toDomain(selectedSample));
+    }
 }

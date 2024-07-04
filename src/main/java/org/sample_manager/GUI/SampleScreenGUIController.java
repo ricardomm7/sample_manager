@@ -106,6 +106,22 @@ public class SampleScreenGUIController {
     }
 
     @FXML
+    void printBarcHandler(ActionEvent event) throws EmptyStringException {
+        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
+        if (selectedIdx != -1) {
+            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
+            SampleDTO selectedSample = allSamples.stream()
+                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedSample != null) {
+                controller.printBarc(selectedSample);
+            }
+        }
+    }
+
+    @FXML
     void createIdHandler(ActionEvent event) {
         Dialog<IdentifierDTO> dialog = new Dialog<>();
         dialog.setTitle("Create identifier");
