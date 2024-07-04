@@ -36,7 +36,6 @@ public class Sample implements Serializable {
 
     public void generateBarcode() {
         this.barcode = identifier + generateRandomNumericString();
-        runAndPrint();
     }
 
     private String generateRandomNumericString() {
@@ -48,12 +47,8 @@ public class Sample implements Serializable {
         return sb.toString();
     }
 
-    private void runAndPrint() {
+    public void runAndPrint() {
         BarcodeGenerator.execute(this.barcode);
-        printBarcode();
-    }
-
-    public void printBarcode() {
         PrintJob.execute();
     }
 
