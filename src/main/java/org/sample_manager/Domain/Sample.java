@@ -17,12 +17,14 @@ public class Sample implements Serializable {
     private LocalDate executionDate;
     private LocalDate expirationDate;
     private String identifier;
+    private Boolean firstTimePrint;
 
-    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate) throws EmptyStringException {
-        generateBarcode();
+    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint) throws EmptyStringException {
         setDescription(description);
         setDangerous(hazard);
         setDates(executionDate, expirationDate);
+        this.firstTimePrint = firstTimePrint;
+        generateBarcode();
     }
 
     private void setDates(LocalDate executionDate, LocalDate expirationDate) {
@@ -36,6 +38,9 @@ public class Sample implements Serializable {
 
     public void generateBarcode() {
         this.barcode = identifier + generateRandomNumericString();
+        if (firstTimePrint) {
+            runAndPrint();
+        }
     }
 
     private String generateRandomNumericString() {
@@ -50,6 +55,7 @@ public class Sample implements Serializable {
     public void runAndPrint() {
         BarcodeGenerator.execute(this.barcode);
         PrintJob.execute();
+        this.firstTimePrint = false;
     }
 
     public String getBarcode() {
@@ -91,6 +97,14 @@ public class Sample implements Serializable {
 
     public void setIdentifier(String identifier) {
         this.identifier = identifier;
+    }
+
+    public void setFirstTimePrint(Boolean firstTimePrint) {
+        this.firstTimePrint = firstTimePrint;
+    }
+
+    public Boolean getFirstTimePrint() {
+        return firstTimePrint;
     }
 
     public void setExecutionDate(LocalDate executionDate) {

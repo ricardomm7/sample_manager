@@ -18,7 +18,7 @@ public class SampleController {
     }
 
     public void create(String description, HazardTypes isDangerous, LocalDate execution, LocalDate expiration) throws EmptyStringException {
-        sampleRepository.createSample(new SampleDTO(description, isDangerous, execution, expiration));
+        sampleRepository.createSample(new SampleDTO(description, isDangerous, execution, expiration, true));
     }
 
     public void remove(SampleDTO s) throws EmptyStringException {

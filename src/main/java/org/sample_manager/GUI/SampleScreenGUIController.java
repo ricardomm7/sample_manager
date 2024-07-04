@@ -90,7 +90,7 @@ public class SampleScreenGUIController {
                     LocalDate expirationDate = expirationDatePicker.getValue();
 
                     // Create the new sample and return
-                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate);
+                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true);
                     try {
                         controller.create(newSample.description, newSample.isDangerous, newSample.executionDate, newSample.expirationDate);
                     } catch (EmptyStringException e) {
