@@ -57,5 +57,16 @@ public class SampleRepository implements Serializable {
     public List<Sample> getSampleList() {
         return new ArrayList<>(sampleList);
     }
+
+    public void updateSample(Sample g) throws EmptyStringException {
+        for (Sample s : sampleList) {
+            if (g.getBarcode() == s.getBarcode()) {
+                s.setDescription(g.getDescription());
+                s.setDangerous(g.isDangerous());
+                s.setExecutionDate(g.getExecutionDate());
+                s.setExpirationDate(g.getExpirationDate());
+            }
+        }
+    }
 }
 

@@ -17,7 +17,8 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem fx:id="propertiesMenuItem" disable="true" mnemonicParsing="false" text="Properties"/>
+                        <MenuItem fx:id="propertiesMenuItem" disable="true" mnemonicParsing="false"
+                                  onAction="#propriertiesHandler" text="Properties"/>
                         <MenuItem fx:id="printBarcMenuItem" disable="true" mnemonicParsing="false"
                                   onAction="#printBarcHandler" text="Print barcode"/>
                         <MenuItem fx:id="removeMenuItem" disable="true" mnemonicParsing="false"

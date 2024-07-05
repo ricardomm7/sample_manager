@@ -32,4 +32,8 @@ public class SampleController {
     public void printBarc(SampleDTO selectedSample) throws EmptyStringException {
         sampleRepository.printBarcode(SampleMapper.toDomain(selectedSample));
     }
+
+    public void update(SampleDTO selectedSample) throws EmptyStringException {
+        sampleRepository.updateSample(SampleMapper.toDomain(selectedSample));
+    }
 }

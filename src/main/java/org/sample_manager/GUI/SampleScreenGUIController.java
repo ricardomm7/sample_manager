@@ -122,6 +122,80 @@ public class SampleScreenGUIController {
     }
 
     @FXML
+    void propriertiesHandler(ActionEvent event) {
+        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
+        if (selectedIdx != -1) {
+            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
+            SampleDTO selectedSample = allSamples.stream()
+                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
+                    .findFirst()
+                    .orElse(null);
+
+            if (selectedSample != null) {
+                Dialog<SampleDTO> dialog = new Dialog<>();
+                dialog.setTitle("Edit Sample");
+
+                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+                dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+
+                GridPane grid = new GridPane();
+                grid.setHgap(10);
+                grid.setVgap(10);
+
+                TextField descriptionField = new TextField(selectedSample.description);
+
+                ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
+                isDangerousField.getItems().addAll(HazardTypes.values());
+                isDangerousField.setValue(selectedSample.isDangerous);
+
+                DatePicker executionDatePicker = new DatePicker(selectedSample.executionDate);
+                DatePicker expirationDatePicker = new DatePicker(selectedSample.expirationDate);
+
+                grid.add(new Label("Description:"), 0, 0);
+                grid.add(descriptionField, 1, 0);
+                grid.add(new Label("Hazard Type:"), 0, 1);
+                grid.add(isDangerousField, 1, 1);
+                grid.add(new Label("Execution Date:"), 0, 2);
+                grid.add(executionDatePicker, 1, 2);
+                grid.add(new Label("Expiration Date:"), 0, 3);
+                grid.add(expirationDatePicker, 1, 3);
+
+                dialog.getDialogPane().setContent(grid);
+
+                dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
+                    @Override
+                    public SampleDTO call(ButtonType dialogButton) {
+                        if (dialogButton == saveButtonType) {
+                            String description = descriptionField.getText();
+                            HazardTypes isDangerous = isDangerousField.getValue();
+                            LocalDate executionDate = executionDatePicker.getValue();
+                            LocalDate expirationDate = expirationDatePicker.getValue();
+
+                            // Update the selected sample
+                            selectedSample.description = description;
+                            selectedSample.isDangerous = isDangerous;
+                            selectedSample.executionDate = executionDate;
+                            selectedSample.expirationDate = expirationDate;
+
+                            // Save changes to the controller
+                            try {
+                                controller.update(selectedSample);
+                            } catch (EmptyStringException e) {
+                                throw new RuntimeException(e);
+                            }
+                            return selectedSample;
+                        }
+                        return null;
+                    }
+                });
+
+                dialog.showAndWait().ifPresent(sampleDTO -> updateListView());
+            }
+        }
+    }
+
+
+    @FXML
     void createIdHandler(ActionEvent event) {
         Dialog<IdentifierDTO> dialog = new Dialog<>();
         dialog.setTitle("Create identifier");
