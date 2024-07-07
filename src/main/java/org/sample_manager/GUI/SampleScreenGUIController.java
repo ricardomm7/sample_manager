@@ -74,7 +74,7 @@ public class SampleScreenGUIController {
         DatePicker expirationDatePicker = new DatePicker();
 
         TextField identifierField = new TextField();
-        identifierField.setPromptText("Max 20 characters, no accents");
+        identifierField.setPromptText("i: No accents or symbols.");
 
         grid.add(new Label("Description:"), 0, 0);
         grid.add(descriptionField, 1, 0);
@@ -94,12 +94,16 @@ public class SampleScreenGUIController {
         createButton.setDisable(true); // Initially disable the create button
 
         identifierField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (isIdentifierValid(newValue)) {
-                identifierField.setStyle("");
-                createButton.setDisable(false);
+            if (newValue.length() > 20) {
+                identifierField.setText(oldValue);
             } else {
-                identifierField.setStyle("-fx-border-color: red;");
-                createButton.setDisable(true);
+                if (isIdentifierValid(newValue)) {
+                    identifierField.setStyle("");
+                    createButton.setDisable(false);
+                } else {
+                    identifierField.setStyle("-fx-border-color: red;");
+                    createButton.setDisable(true);
+                }
             }
         });
 
@@ -193,6 +197,10 @@ public class SampleScreenGUIController {
                 grid.add(executionDatePicker, 1, 2);
                 grid.add(new Label("Expiration Date:"), 0, 3);
                 grid.add(expirationDatePicker, 1, 3);
+
+                Label infoLabel = new Label("It is not possible to edit the sample identifier. \nIf you want to, create a new one.");
+                infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 8px;");
+                grid.add(infoLabel, 0, 5);
 
                 dialog.getDialogPane().setContent(grid);
 
