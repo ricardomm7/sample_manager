@@ -1,3 +1,4 @@
+![Cover](images/mainreadme-cover.svg)
 # Sample Manager
 
 Sample Manager is a Java program designed to streamline the cataloging process of samples stored in refrigerators (or not), with built-in barcode generation for efficient tracking.
@@ -9,7 +10,7 @@ Sample Manager is a Java program designed to streamline the cataloging process o
 - **Efficient Management**: Streamline inventory management with intuitive tools for adding, updating, and removing samples.
 - **Print Functionality**: Seamlessly print generated barcodes for physical labeling and easy identification in the laboratory.
 - **Sample Searching:** Quickly search for samples using keywords or barcodes/barcode prefixes to locate them in the catalog.
-- **Identificator (Laboratory) Addition:** Add a unique laboratory identifier as a prefix to the barcode for enhanced organization and traceability.
+- **Identification (Laboratory) Addition:** Add a unique laboratory identifier as a prefix to the barcode for enhanced organization and traceability.
 
 ## Use from source code
 
@@ -17,6 +18,9 @@ Sample Manager is a Java program designed to streamline the cataloging process o
 2. Open the project in your preferred Java IDE.
 3. Run the `Main` class to launch the application.
 4. Follow the on-screen instructions to start cataloging and managing samples, or visit the user-manual.
+
+## Bugs & Opinion
+If you encounter any bugs or issues with the program, please notify me. Your feedback is invaluable in improving Sample Manager.
 
 ## Dependencies
 
