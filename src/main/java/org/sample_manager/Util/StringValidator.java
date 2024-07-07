@@ -13,7 +13,7 @@ public class StringValidator {
     }
 
     public static void validateSymbols(String value, String fieldName) throws SymbolsStringException {
-        if (Pattern.compile("[^a-zA-Z0-9]").matcher(value).find()) {
+        if (Pattern.compile("[^\\p{L}\\p{N} ]").matcher(value).find()) {
             throw new SymbolsStringException(fieldName + " contains invalid symbols.");
         }
     }

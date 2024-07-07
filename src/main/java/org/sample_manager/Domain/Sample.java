@@ -3,6 +3,7 @@ package org.sample_manager.Domain;
 import org.sample_manager.External.BarcodeGenerator;
 import org.sample_manager.External.PrintJob;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.SymbolsStringException;
 import org.sample_manager.Util.StringValidator;
 
 import java.io.Serializable;
@@ -19,10 +20,11 @@ public class Sample implements Serializable {
     private String identifier;
     private Boolean firstTimePrint;
 
-    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint) throws EmptyStringException {
+    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint, String identifier) throws EmptyStringException, SymbolsStringException {
         setDescription(description);
         setDangerous(hazard);
         setDates(executionDate, expirationDate);
+        setIdentifier(identifier);
         this.firstTimePrint = firstTimePrint;
         generateBarcode();
     }
@@ -37,7 +39,7 @@ public class Sample implements Serializable {
     }
 
     public void generateBarcode() {
-        this.barcode = identifier + generateRandomNumericString();
+        this.barcode = this.identifier.replaceAll("\\s+", "").toLowerCase() + generateRandomNumericString();
         if (firstTimePrint) {
             runAndPrint();
         }
@@ -95,7 +97,9 @@ public class Sample implements Serializable {
         this.barcode = barcode;
     }
 
-    public void setIdentifier(String identifier) {
+    public void setIdentifier(String identifier) throws EmptyStringException, SymbolsStringException {
+        StringValidator.validateNotEmpty(identifier, "Identifier");
+        StringValidator.validateSymbols(identifier, "Identifier");
         this.identifier = identifier;
     }
 

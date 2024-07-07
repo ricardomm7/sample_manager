@@ -10,26 +10,26 @@ public class SampleDTO {
     public HazardTypes isDangerous;
     public LocalDate executionDate;
     public LocalDate expirationDate;
-    public String labIdentifier;
+    public String identifier;
     public Boolean firstTimePrint;
 
-    public SampleDTO(String description, HazardTypes isDangerous, LocalDate executionDate, LocalDate expirationDate, String barcode, String labIdentifier, Boolean firstTimePrint) {
+    public SampleDTO(String description, HazardTypes isDangerous, LocalDate executionDate, LocalDate expirationDate, String barcode, String identifier, Boolean firstTimePrint) {
         this.description = description;
         this.isDangerous = isDangerous;
         this.executionDate = executionDate;
         this.expirationDate = expirationDate;
         this.barcode = barcode;
-        this.labIdentifier = labIdentifier;
+        this.identifier = identifier;
         this.firstTimePrint = firstTimePrint;
     }
 
-    public SampleDTO(String description, HazardTypes isDangerous, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint) {
+    public SampleDTO(String description, HazardTypes isDangerous, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint, String identifier) {
         this.description = description;
         this.isDangerous = isDangerous;
         this.executionDate = executionDate;
         this.expirationDate = expirationDate;
         this.barcode = null;
-        this.labIdentifier = null;
+        this.identifier = identifier;
         this.firstTimePrint = firstTimePrint;
     }
 }

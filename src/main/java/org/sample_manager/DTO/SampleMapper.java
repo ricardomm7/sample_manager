@@ -2,6 +2,7 @@ package org.sample_manager.DTO;
 
 import org.sample_manager.Domain.Sample;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.SymbolsStringException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,11 @@ public class SampleMapper {
         return new SampleDTO(o.getDescription(), o.isDangerous(), o.getExecutionDate(), o.getExpirationDate(), o.getBarcode(), o.getIdentifier(), o.getFirstTimePrint());
     }
 
-    public static Sample toDomain(SampleDTO i) throws EmptyStringException {
-        Sample s1 = new Sample(i.description, i.isDangerous, i.executionDate, i.expirationDate, i.firstTimePrint);
+    public static Sample toDomain(SampleDTO i) throws EmptyStringException, SymbolsStringException {
+        Sample s1 = new Sample(i.description, i.isDangerous, i.executionDate, i.expirationDate, i.firstTimePrint, i.identifier);
         if (i.barcode != null) {
             s1.setBarcode(i.barcode);
-            s1.setIdentifier(i.labIdentifier);
+            //s1.setIdentifier(i.identifier);
         }
         return s1;
     }

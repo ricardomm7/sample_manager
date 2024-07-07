@@ -5,16 +5,20 @@ import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.util.Callback;
 import org.sample_manager.Controller.SampleController;
-import org.sample_manager.DTO.IdentifierDTO;
 import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.Domain.HazardTypes;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
+import org.sample_manager.Util.Exceptions.SymbolsStringException;
 
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class SampleScreenGUIController {
@@ -69,6 +73,9 @@ public class SampleScreenGUIController {
         DatePicker executionDatePicker = new DatePicker();
         DatePicker expirationDatePicker = new DatePicker();
 
+        TextField identifierField = new TextField();
+        identifierField.setPromptText("Max 20 characters, no accents");
+
         grid.add(new Label("Description:"), 0, 0);
         grid.add(descriptionField, 1, 0);
         grid.add(new Label("Hazard Type:"), 0, 1);
@@ -77,8 +84,24 @@ public class SampleScreenGUIController {
         grid.add(executionDatePicker, 1, 2);
         grid.add(new Label("Expiration Date:"), 0, 3);
         grid.add(expirationDatePicker, 1, 3);
+        grid.add(new Label("Identifier:"), 0, 4);
+        grid.add(identifierField, 1, 4);
 
         dialog.getDialogPane().setContent(grid);
+
+        // Button reference
+        Button createButton = (Button) dialog.getDialogPane().lookupButton(createButtonType);
+        createButton.setDisable(true); // Initially disable the create button
+
+        identifierField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (isIdentifierValid(newValue)) {
+                identifierField.setStyle("");
+                createButton.setDisable(false);
+            } else {
+                identifierField.setStyle("-fx-border-color: red;");
+                createButton.setDisable(true);
+            }
+        });
 
         dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
             @Override
@@ -88,12 +111,13 @@ public class SampleScreenGUIController {
                     HazardTypes isDangerous = isDangerousField.getValue();
                     LocalDate executionDate = executionDatePicker.getValue();
                     LocalDate expirationDate = expirationDatePicker.getValue();
+                    String identifier = identifierField.getText();
 
                     // Create the new sample and return
-                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true);
+                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier);
                     try {
-                        controller.create(newSample.description, newSample.isDangerous, newSample.executionDate, newSample.expirationDate);
-                    } catch (EmptyStringException e) {
+                        controller.create(newSample.description, newSample.isDangerous, newSample.executionDate, newSample.expirationDate, newSample.identifier);
+                    } catch (EmptyStringException | SymbolsStringException e) {
                         throw new RuntimeException(e);
                     }
                     return newSample;
@@ -105,8 +129,18 @@ public class SampleScreenGUIController {
         dialog.showAndWait().ifPresent(sampleDTO -> updateListView());
     }
 
+    private boolean isIdentifierValid(String identifier) {
+        if (identifier.length() > 20) {
+            return false;
+        }
+        String normalized = Normalizer.normalize(identifier, Normalizer.Form.NFD);
+        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String withoutAccents = pattern.matcher(normalized).replaceAll("");
+        return identifier.equals(withoutAccents);
+    }
+
     @FXML
-    void printBarcHandler(ActionEvent event) throws EmptyStringException {
+    void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
         int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
@@ -182,6 +216,8 @@ public class SampleScreenGUIController {
                                 controller.update(selectedSample);
                             } catch (EmptyStringException e) {
                                 throw new RuntimeException(e);
+                            } catch (SymbolsStringException e) {
+                                throw new RuntimeException(e);
                             }
                             return selectedSample;
                         }
@@ -194,59 +230,8 @@ public class SampleScreenGUIController {
         }
     }
 
-
     @FXML
-    void createIdHandler(ActionEvent event) {
-        Dialog<IdentifierDTO> dialog = new Dialog<>();
-        dialog.setTitle("Create identifier");
-
-        ButtonType createButtonType = new ButtonType("Create", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(createButtonType, ButtonType.CANCEL);
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-
-        TextField name = new TextField();
-        Label descriptionLabel = new Label();
-        descriptionLabel.setStyle("-fx-font-weight: bold;"); // Set the text to be bold
-
-        // Add ChangeListener to update label in real-time and enforce 20 character limit
-        name.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.length() > 20) {
-                name.setText(oldValue); // Prevent input beyond 20 characters
-            } else {
-                descriptionLabel.setText(newValue.toLowerCase().trim());
-            }
-        });
-
-        grid.add(new Label("Name:"), 0, 0);
-        grid.add(name, 1, 0);
-        grid.add(new Label("Code Prefix:"), 0, 1);
-        grid.add(descriptionLabel, 1, 1); // Add the label below the text field
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(new Callback<ButtonType, IdentifierDTO>() {
-            @Override
-            public IdentifierDTO call(ButtonType dialogButton) {
-                if (dialogButton == createButtonType) {
-                    String description = name.getText();
-
-                    // Create the new identifier and return
-                    IdentifierDTO id = new IdentifierDTO(description);
-                    return id;
-                }
-                return null;
-            }
-        });
-
-        dialog.showAndWait().ifPresent(identifierDTO -> updateListView());
-    }
-
-
-    @FXML
-    void removeBtnHandler(ActionEvent event) throws EmptyStringException {
+    void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
         int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
         if (selectedIdx != -1) {
             String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
@@ -263,7 +248,14 @@ public class SampleScreenGUIController {
     }
 
     @FXML
-    protected void onSearchButtonClick() {
+    void onEnterSearchHandler(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            onSearchButtonClick(new ActionEvent());
+        }
+    }
+
+    @FXML
+    void onSearchButtonClick(ActionEvent event) {
         String searchText = searchField.getText().toLowerCase();
 
         // Filtra a lista com base no texto de busca
