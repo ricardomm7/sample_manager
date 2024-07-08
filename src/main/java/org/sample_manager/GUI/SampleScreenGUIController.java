@@ -2,6 +2,8 @@ package org.sample_manager.GUI;
 
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -24,32 +26,60 @@ import java.util.stream.Collectors;
 public class SampleScreenGUIController {
     private final SampleController controller = new SampleController();
     private List<SampleDTO> allSamples;
+
     @FXML
     private TextField searchField;
-
-    @FXML
-    private ListView<String> sampleListView;
-
-    @FXML
-    private Button removeBtn;
 
     @FXML
     private MenuItem removeMenuItem;
 
     @FXML
+    private TableColumn<SampleDTO, LocalDate> executionColumn;
+
+    @FXML
+    private TableColumn<SampleDTO, HazardTypes> hazardColumn;
+
+    @FXML
+    private TableColumn<SampleDTO, LocalDate> expirationcolumn;
+
+    @FXML
+    private TableColumn<SampleDTO, String> descriptionColumn;
+
+    @FXML
+    private TableColumn<SampleDTO, String> idColumn;
+
+    @FXML
+    private TableColumn<SampleDTO, String> barcodeColumn;
+
+    @FXML
+    private TableView<SampleDTO> sampleTableView;
+
+    @FXML
     private MenuItem printBarcMenuItem;
+
+    @FXML
+    private Button removeBtn;
 
     @FXML
     private MenuItem propertiesMenuItem;
 
-
     @FXML
     public void initialize() {
-        updateListView();
-        removeBtn.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
-        removeMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
-        printBarcMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
-        propertiesMenuItem.disableProperty().bind(Bindings.isEmpty(sampleListView.getSelectionModel().getSelectedItems()));
+        setupTableColumns();
+        updateTableView();
+        removeBtn.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
+        removeMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
+        printBarcMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
+        propertiesMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
+    }
+
+    private void setupTableColumns() {
+        executionColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().executionDate));
+        hazardColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().isDangerous));
+        expirationcolumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().expirationDate));
+        descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().description));
+        idColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().identifier));
+        barcodeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().barcode));
     }
 
     @FXML
@@ -130,7 +160,7 @@ public class SampleScreenGUIController {
             }
         });
 
-        dialog.showAndWait().ifPresent(sampleDTO -> updateListView());
+        dialog.showAndWait().ifPresent(sampleDTO -> updateTableView());
     }
 
     private boolean isIdentifierValid(String identifier) {
@@ -145,113 +175,87 @@ public class SampleScreenGUIController {
 
     @FXML
     void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
-        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
-        if (selectedIdx != -1) {
-            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
-            SampleDTO selectedSample = allSamples.stream()
-                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
-                    .findFirst()
-                    .orElse(null);
-
-            if (selectedSample != null) {
-                controller.printBarc(selectedSample);
-            }
+        SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
+        if (selectedSample != null) {
+            controller.printBarc(selectedSample);
         }
     }
 
     @FXML
     void propriertiesHandler(ActionEvent event) {
-        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
-        if (selectedIdx != -1) {
-            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
-            SampleDTO selectedSample = allSamples.stream()
-                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
-                    .findFirst()
-                    .orElse(null);
+        SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
+        if (selectedSample != null) {
+            Dialog<SampleDTO> dialog = new Dialog<>();
+            dialog.setTitle("Edit Sample");
 
-            if (selectedSample != null) {
-                Dialog<SampleDTO> dialog = new Dialog<>();
-                dialog.setTitle("Edit Sample");
+            ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
 
-                ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
-                dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
 
-                GridPane grid = new GridPane();
-                grid.setHgap(10);
-                grid.setVgap(10);
+            TextField descriptionField = new TextField(selectedSample.description);
 
-                TextField descriptionField = new TextField(selectedSample.description);
+            ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
+            isDangerousField.getItems().addAll(HazardTypes.values());
+            isDangerousField.setValue(selectedSample.isDangerous);
 
-                ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
-                isDangerousField.getItems().addAll(HazardTypes.values());
-                isDangerousField.setValue(selectedSample.isDangerous);
+            DatePicker executionDatePicker = new DatePicker(selectedSample.executionDate);
+            DatePicker expirationDatePicker = new DatePicker(selectedSample.expirationDate);
 
-                DatePicker executionDatePicker = new DatePicker(selectedSample.executionDate);
-                DatePicker expirationDatePicker = new DatePicker(selectedSample.expirationDate);
+            grid.add(new Label("Description:"), 0, 0);
+            grid.add(descriptionField, 1, 0);
+            grid.add(new Label("Hazard Type:"), 0, 1);
+            grid.add(isDangerousField, 1, 1);
+            grid.add(new Label("Execution Date:"), 0, 2);
+            grid.add(executionDatePicker, 1, 2);
+            grid.add(new Label("Expiration Date:"), 0, 3);
+            grid.add(expirationDatePicker, 1, 3);
 
-                grid.add(new Label("Description:"), 0, 0);
-                grid.add(descriptionField, 1, 0);
-                grid.add(new Label("Hazard Type:"), 0, 1);
-                grid.add(isDangerousField, 1, 1);
-                grid.add(new Label("Execution Date:"), 0, 2);
-                grid.add(executionDatePicker, 1, 2);
-                grid.add(new Label("Expiration Date:"), 0, 3);
-                grid.add(expirationDatePicker, 1, 3);
+            Label infoLabel = new Label("It is not possible to edit the sample identifier. \nIf you want to, create a new one.");
+            infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 10px;");
+            grid.add(infoLabel, 0, 5);
 
-                Label infoLabel = new Label("It is not possible to edit the sample identifier. \nIf you want to, create a new one.");
-                infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 8px;");
-                grid.add(infoLabel, 0, 5);
+            dialog.getDialogPane().setContent(grid);
 
-                dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
+                @Override
+                public SampleDTO call(ButtonType dialogButton) {
+                    if (dialogButton == saveButtonType) {
+                        String description = descriptionField.getText();
+                        HazardTypes isDangerous = isDangerousField.getValue();
+                        LocalDate executionDate = executionDatePicker.getValue();
+                        LocalDate expirationDate = expirationDatePicker.getValue();
 
-                dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
-                    @Override
-                    public SampleDTO call(ButtonType dialogButton) {
-                        if (dialogButton == saveButtonType) {
-                            String description = descriptionField.getText();
-                            HazardTypes isDangerous = isDangerousField.getValue();
-                            LocalDate executionDate = executionDatePicker.getValue();
-                            LocalDate expirationDate = expirationDatePicker.getValue();
+                        // Update the selected sample
+                        selectedSample.description = description;
+                        selectedSample.isDangerous = isDangerous;
+                        selectedSample.executionDate = executionDate;
+                        selectedSample.expirationDate = expirationDate;
 
-                            // Update the selected sample
-                            selectedSample.description = description;
-                            selectedSample.isDangerous = isDangerous;
-                            selectedSample.executionDate = executionDate;
-                            selectedSample.expirationDate = expirationDate;
-
-                            // Save changes to the controller
-                            try {
-                                controller.update(selectedSample);
-                            } catch (EmptyStringException e) {
-                                throw new RuntimeException(e);
-                            } catch (SymbolsStringException e) {
-                                throw new RuntimeException(e);
-                            }
-                            return selectedSample;
+                        // Save changes to the controller
+                        try {
+                            controller.update(selectedSample);
+                        } catch (EmptyStringException | SymbolsStringException e) {
+                            throw new RuntimeException(e);
                         }
-                        return null;
+                        return selectedSample;
                     }
-                });
+                    return null;
+                }
+            });
 
-                dialog.showAndWait().ifPresent(sampleDTO -> updateListView());
-            }
+            dialog.showAndWait().ifPresent(sampleDTO -> updateTableView());
         }
     }
 
     @FXML
     void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
-        int selectedIdx = sampleListView.getSelectionModel().getSelectedIndex();
-        if (selectedIdx != -1) {
-            String selectedSampleDescription = sampleListView.getSelectionModel().getSelectedItem();
-            SampleDTO selectedSample = allSamples.stream()
-                    .filter(sample -> (sample.barcode + " - " + sample.description).equals(selectedSampleDescription))
-                    .findFirst()
-                    .orElse(null);
-
-            if (selectedSample != null) {
-                controller.remove(selectedSample);
-                updateListView();
-            }
+        SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
+        if (selectedSample != null) {
+            controller.remove(selectedSample);
+            updateTableView();
         }
     }
 
@@ -267,22 +271,17 @@ public class SampleScreenGUIController {
         String searchText = searchField.getText().toLowerCase();
 
         // Filtra a lista com base no texto de busca
-        List<String> filteredSamples = allSamples.stream()
+        List<SampleDTO> filteredSamples = allSamples.stream()
                 .filter(sample -> sample.barcode.toLowerCase().contains(searchText) ||
                         sample.description.toLowerCase().contains(searchText))
-                .map(sample -> sample.barcode + " - " + sample.description)
                 .collect(Collectors.toList());
 
-        sampleListView.getItems().setAll(filteredSamples);
+        sampleTableView.getItems().setAll(filteredSamples);
     }
 
-    private void updateListView() {
+    private void updateTableView() {
         allSamples = controller.getAllSamples();
-        List<String> sampleList = allSamples.stream()
-                .map(sample -> sample.barcode + " - " + sample.description)
-                .collect(Collectors.toList());
-
-        sampleListView.getItems().setAll(sampleList);
+        sampleTableView.getItems().setAll(allSamples);
     }
 
     @FXML
