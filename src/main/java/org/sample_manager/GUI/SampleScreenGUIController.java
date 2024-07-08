@@ -213,8 +213,8 @@ public class SampleScreenGUIController {
             grid.add(new Label("Expiration Date:"), 0, 3);
             grid.add(expirationDatePicker, 1, 3);
 
-            Label infoLabel = new Label("It is not possible to edit the sample identifier. \nIf you want to, create a new one.");
-            infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 10px;");
+            Label infoLabel = new Label("i: The identifier cannot be edited.");
+            infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 8px;");
             grid.add(infoLabel, 0, 5);
 
             dialog.getDialogPane().setContent(grid);

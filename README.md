@@ -11,6 +11,8 @@ Sample Manager is a Java program designed to streamline the cataloging process o
 - **Print Functionality**: Seamlessly print generated barcodes for physical labeling and easy identification in the laboratory.
 - **Sample Searching:** Quickly search for samples using keywords or barcodes/barcode prefixes to locate them in the catalog.
 - **Identification (Laboratory) Addition:** Add a unique laboratory identifier as a prefix to the barcode for enhanced organization and traceability.
+- **Column Configuration:** Each sample attribute (Description, Hazard Type, Execution Date, Expiration Date, Identifier, and Barcode) is displayed in its own column within the table for easy viewing and sorting.
+- **Sample Details Dialog:** The creation and editing of samples are now managed through comprehensive dialogs that ensure all necessary information is captured accurately.
 
 ## Use from source code
 
