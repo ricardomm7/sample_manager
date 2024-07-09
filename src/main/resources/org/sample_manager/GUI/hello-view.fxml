@@ -64,11 +64,15 @@
                 <TableView fx:id="sampleTableView" BorderPane.alignment="CENTER">
                     <columns>
                         <TableColumn fx:id="descriptionColumn" editable="false" prefWidth="75.0" text="Description"/>
-                        <TableColumn fx:id="hazardColumn" editable="false" prefWidth="75.0" text="Hazard"/>
-                        <TableColumn fx:id="executionColumn" editable="false" prefWidth="75.0" text="Execution Date"/>
-                        <TableColumn fx:id="expirationcolumn" editable="false" prefWidth="75.0" text="Expiration Date"/>
+                        <TableColumn fx:id="hazardColumn" editable="false" prefWidth="75.0" sortable="false"
+                                     text="Hazard"/>
+                        <TableColumn fx:id="executionColumn" editable="false" prefWidth="75.0" sortable="false"
+                                     text="Execution Date"/>
+                        <TableColumn fx:id="expirationcolumn" editable="false" prefWidth="75.0" sortable="false"
+                                     text="Expiration Date"/>
                         <TableColumn fx:id="idColumn" editable="false" prefWidth="75.0" text="Identifier"/>
-                        <TableColumn fx:id="barcodeColumn" editable="false" prefWidth="75.0" text="Barcode"/>
+                        <TableColumn fx:id="barcodeColumn" editable="false" prefWidth="75.0" sortable="false"
+                                     text="Barcode"/>
                     </columns>
                     <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
