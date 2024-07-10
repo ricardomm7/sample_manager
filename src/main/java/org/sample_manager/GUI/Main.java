@@ -13,7 +13,7 @@ import java.util.Objects;
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("samplelist-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Sample Manager - v0.1 (Beta)");
         stage.setScene(scene);

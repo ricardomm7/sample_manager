@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class SampleScreenGUIController {
+public class SampleListGUIController {
     private final SampleController controller = new SampleController();
     private List<SampleDTO> allSamples;
 
