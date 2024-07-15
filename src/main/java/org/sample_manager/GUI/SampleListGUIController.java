@@ -295,41 +295,41 @@ public class SampleListGUIController {
     }
 
     @FXML
-    void createReceivedSamplesBtnHandler(ActionEvent event) {
+    void createReceivedMaterialBtnHandler(ActionEvent event) {
 
     }
 
     @FXML
-    void onSearchReceivedSamplesButtonClick(ActionEvent event) {
+    void onSearchReceivedMaterialButtonClick(ActionEvent event) {
 
     }
 
     @FXML
-    void removeReceivedSamplesBtnHandler(ActionEvent event) {
+    void removeReceivedMaterialBtnHandler(ActionEvent event) {
 
     }
 
     @FXML
-    private TableColumn<?, ?> descriptionReceivedSamplesColumn;
+    private TableColumn<?, ?> descriptionReceivedMaterialColumn;
 
     @FXML
-    private TableColumn<?, ?> hazardReceivedSamplesColumn;
+    private TableColumn<?, ?> hazardReceivedMaterialColumn;
 
     @FXML
-    private TableColumn<?, ?> expirationReceivedSamplescolumn;
+    private TableColumn<?, ?> expirationReceivedMaterialcolumn;
 
     @FXML
-    private TableColumn<?, ?> idReceivedSamplesColumn;
+    private TableColumn<?, ?> idReceivedMaterialColumn;
 
     @FXML
-    private TableColumn<?, ?> barcodeReceivedSamplesColumn;
+    private TableColumn<?, ?> barcodeReceivedMaterialColumn;
 
     @FXML
     private TableView<SampleDTO> sampleTableView1;
 
     @FXML
-    private TextField searchFieldReceivedSamples;
+    private TextField searchFieldReceivedMaterial;
 
     @FXML
-    private Button removeReceivedSamplesBtn;
+    private Button removeReceivedMaterialBtn;
 }
