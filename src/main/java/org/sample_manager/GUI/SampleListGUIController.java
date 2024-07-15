@@ -293,4 +293,43 @@ public class SampleListGUIController {
     void closeHandler(ActionEvent event) {
         Platform.exit();
     }
+
+    @FXML
+    void createReceivedSamplesBtnHandler(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onSearchReceivedSamplesButtonClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void removeReceivedSamplesBtnHandler(ActionEvent event) {
+
+    }
+
+    @FXML
+    private TableColumn<?, ?> descriptionReceivedSamplesColumn;
+
+    @FXML
+    private TableColumn<?, ?> hazardReceivedSamplesColumn;
+
+    @FXML
+    private TableColumn<?, ?> expirationReceivedSamplescolumn;
+
+    @FXML
+    private TableColumn<?, ?> idReceivedSamplesColumn;
+
+    @FXML
+    private TableColumn<?, ?> barcodeReceivedSamplesColumn;
+
+    @FXML
+    private TableView<SampleDTO> sampleTableView1;
+
+    @FXML
+    private TextField searchFieldReceivedSamples;
+
+    @FXML
+    private Button removeReceivedSamplesBtn;
 }
