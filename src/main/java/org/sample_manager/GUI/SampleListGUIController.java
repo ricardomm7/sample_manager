@@ -293,43 +293,4 @@ public class SampleListGUIController {
     void closeHandler(ActionEvent event) {
         Platform.exit();
     }
-
-    @FXML
-    void createReceivedMaterialBtnHandler(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onSearchReceivedMaterialButtonClick(ActionEvent event) {
-
-    }
-
-    @FXML
-    void removeReceivedMaterialBtnHandler(ActionEvent event) {
-
-    }
-
-    @FXML
-    private TableColumn<?, ?> descriptionReceivedMaterialColumn;
-
-    @FXML
-    private TableColumn<?, ?> hazardReceivedMaterialColumn;
-
-    @FXML
-    private TableColumn<?, ?> expirationReceivedMaterialcolumn;
-
-    @FXML
-    private TableColumn<?, ?> idReceivedMaterialColumn;
-
-    @FXML
-    private TableColumn<?, ?> barcodeReceivedMaterialColumn;
-
-    @FXML
-    private TableView<SampleDTO> sampleTableView1;
-
-    @FXML
-    private TextField searchFieldReceivedMaterial;
-
-    @FXML
-    private Button removeReceivedMaterialBtn;
 }
