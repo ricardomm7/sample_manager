@@ -16,6 +16,7 @@ import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.Domain.HazardTypes;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
+import org.sample_manager.Util.Exceptions.TemperatureException;
 
 import java.text.Normalizer;
 import java.time.LocalDate;
@@ -49,7 +50,7 @@ public class SampleListGUIController {
     private TableColumn<SampleDTO, String> idColumn;
 
     @FXML
-    private TableColumn<SampleDTO, String> barcodeColumn;
+    private TableColumn<SampleDTO, String> tempColumn;
 
     @FXML
     private TableView<SampleDTO> sampleTableView;
@@ -75,11 +76,11 @@ public class SampleListGUIController {
 
     private void setupTableColumns() {
         executionColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().executionDate));
-        hazardColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().isDangerous));
+        hazardColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().hazard));
         expirationcolumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().expirationDate));
         descriptionColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().description));
         idColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().identifier));
-        barcodeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().barcode));
+        tempColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().temperature.toString() + "ºC"));
     }
 
     @FXML
@@ -106,6 +107,9 @@ public class SampleListGUIController {
         TextField identifierField = new TextField();
         identifierField.setPromptText("i: No accents or symbols.");
 
+        TextField temperatureField = new TextField();
+        temperatureField.setPromptText("i: In Celsius.");
+
         grid.add(new Label("Description:"), 0, 0);
         grid.add(descriptionField, 1, 0);
         grid.add(new Label("Hazard Type:"), 0, 1);
@@ -114,8 +118,10 @@ public class SampleListGUIController {
         grid.add(executionDatePicker, 1, 2);
         grid.add(new Label("Expiration Date:"), 0, 3);
         grid.add(expirationDatePicker, 1, 3);
-        grid.add(new Label("Identifier:"), 0, 4);
-        grid.add(identifierField, 1, 4);
+        grid.add(new Label("Temperature:"), 0, 4);
+        grid.add(temperatureField, 1, 4);
+        grid.add(new Label("Identifier:"), 0, 5);
+        grid.add(identifierField, 1, 5);
 
         dialog.getDialogPane().setContent(grid);
 
@@ -123,18 +129,28 @@ public class SampleListGUIController {
         Button createButton = (Button) dialog.getDialogPane().lookupButton(createButtonType);
         createButton.setDisable(true); // Initially disable the create button
 
+        // Identifier validation
         identifierField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 20) {
                 identifierField.setText(oldValue);
             } else {
                 if (isIdentifierValid(newValue)) {
                     identifierField.setStyle("");
-                    createButton.setDisable(false);
                 } else {
                     identifierField.setStyle("-fx-border-color: red;");
-                    createButton.setDisable(true);
                 }
             }
+            validateForm(createButton, identifierField, temperatureField);
+        });
+
+        // Temperature validation
+        temperatureField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (isDouble(newValue)) {
+                temperatureField.setStyle("");
+            } else {
+                temperatureField.setStyle("-fx-border-color: red;");
+            }
+            validateForm(createButton, identifierField, temperatureField);
         });
 
         dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
@@ -146,12 +162,13 @@ public class SampleListGUIController {
                     LocalDate executionDate = executionDatePicker.getValue();
                     LocalDate expirationDate = expirationDatePicker.getValue();
                     String identifier = identifierField.getText();
+                    double temperature = Double.parseDouble(temperatureField.getText());
 
                     // Create the new sample and return
-                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier);
+                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier, temperature);
                     try {
-                        controller.create(newSample.description, newSample.isDangerous, newSample.executionDate, newSample.expirationDate, newSample.identifier);
-                    } catch (EmptyStringException | SymbolsStringException e) {
+                        controller.create(newSample.description, newSample.hazard, newSample.executionDate, newSample.expirationDate, newSample.identifier, newSample.temperature);
+                    } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
                         throw new RuntimeException(e);
                     }
                     return newSample;
@@ -173,8 +190,24 @@ public class SampleListGUIController {
         return identifier.equals(withoutAccents);
     }
 
+    private boolean isDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void validateForm(Button createButton, TextField identifierField, TextField temperatureField) {
+        boolean isIdentifierValid = isIdentifierValid(identifierField.getText());
+        boolean isTemperatureValid = isDouble(temperatureField.getText());
+        createButton.setDisable(!(isIdentifierValid && isTemperatureValid));
+    }
+
+
     @FXML
-    void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
+    void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException {
         SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
         if (selectedSample != null) {
             controller.printBarc(selectedSample);
@@ -197,21 +230,26 @@ public class SampleListGUIController {
 
             TextField descriptionField = new TextField(selectedSample.description);
 
-            ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
-            isDangerousField.getItems().addAll(HazardTypes.values());
-            isDangerousField.setValue(selectedSample.isDangerous);
+            ChoiceBox<HazardTypes> hazardField = new ChoiceBox<>();
+            hazardField.getItems().addAll(HazardTypes.values());
+            hazardField.setValue(selectedSample.hazard);
 
             DatePicker executionDatePicker = new DatePicker(selectedSample.executionDate);
             DatePicker expirationDatePicker = new DatePicker(selectedSample.expirationDate);
 
+            TextField temperatureField = new TextField(selectedSample.temperature.toString());
+            temperatureField.setPromptText("i: In Celsius.");
+
             grid.add(new Label("Description:"), 0, 0);
             grid.add(descriptionField, 1, 0);
             grid.add(new Label("Hazard Type:"), 0, 1);
-            grid.add(isDangerousField, 1, 1);
+            grid.add(hazardField, 1, 1);
             grid.add(new Label("Execution Date:"), 0, 2);
             grid.add(executionDatePicker, 1, 2);
             grid.add(new Label("Expiration Date:"), 0, 3);
             grid.add(expirationDatePicker, 1, 3);
+            grid.add(new Label("Temperature:"), 0, 4);
+            grid.add(temperatureField, 1, 4);
 
             Label infoLabel = new Label("i: The identifier cannot be edited.");
             infoLabel.setStyle("-fx-opacity: 0.5; -fx-font-size: 8px;");
@@ -224,20 +262,22 @@ public class SampleListGUIController {
                 public SampleDTO call(ButtonType dialogButton) {
                     if (dialogButton == saveButtonType) {
                         String description = descriptionField.getText();
-                        HazardTypes isDangerous = isDangerousField.getValue();
+                        HazardTypes hazard = hazardField.getValue();
                         LocalDate executionDate = executionDatePicker.getValue();
                         LocalDate expirationDate = expirationDatePicker.getValue();
+                        Double temperature = Double.parseDouble(temperatureField.getText());
 
                         // Update the selected sample
                         selectedSample.description = description;
-                        selectedSample.isDangerous = isDangerous;
+                        selectedSample.hazard = hazard;
                         selectedSample.executionDate = executionDate;
                         selectedSample.expirationDate = expirationDate;
+                        selectedSample.temperature = temperature;
 
                         // Save changes to the controller
                         try {
                             controller.update(selectedSample);
-                        } catch (EmptyStringException | SymbolsStringException e) {
+                        } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
                             throw new RuntimeException(e);
                         }
                         return selectedSample;
@@ -251,7 +291,7 @@ public class SampleListGUIController {
     }
 
     @FXML
-    void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException {
+    void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException {
         SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
         if (selectedSample != null) {
             controller.remove(selectedSample);

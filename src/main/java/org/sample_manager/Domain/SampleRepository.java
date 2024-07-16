@@ -4,6 +4,7 @@ import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.DTO.SampleMapper;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
+import org.sample_manager.Util.Exceptions.TemperatureException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class SampleRepository implements Serializable {
         sampleList = new ArrayList<>();
     }
 
-    public void createSample(SampleDTO p) throws EmptyStringException, SymbolsStringException {
+    public void createSample(SampleDTO p) throws EmptyStringException, SymbolsStringException, TemperatureException {
         Sample s = SampleMapper.toDomain(p);
         boolean b = false;
         while (!b) {
@@ -63,7 +64,7 @@ public class SampleRepository implements Serializable {
         for (Sample s : sampleList) {
             if (g.getBarcode() == s.getBarcode()) {
                 s.setDescription(g.getDescription());
-                s.setDangerous(g.isDangerous());
+                s.setHazard(g.getHazard());
                 s.setExecutionDate(g.getExecutionDate());
                 s.setExpirationDate(g.getExpirationDate());
             }

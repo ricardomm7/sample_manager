@@ -4,7 +4,9 @@ import org.sample_manager.External.BarcodeGenerator;
 import org.sample_manager.External.PrintJob;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
+import org.sample_manager.Util.Exceptions.TemperatureException;
 import org.sample_manager.Util.StringValidator;
+import org.sample_manager.Util.TemperatureValidator;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,14 +21,25 @@ public class Sample implements Serializable {
     private LocalDate expirationDate;
     private String identifier;
     private Boolean firstTimePrint;
+    private Double temperature;
 
-    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint, String identifier) throws EmptyStringException, SymbolsStringException {
+    public Sample(String description, HazardTypes hazard, LocalDate executionDate, LocalDate expirationDate, Boolean firstTimePrint, String identifier, Double temperature) throws EmptyStringException, SymbolsStringException, TemperatureException {
         setDescription(description);
-        setDangerous(hazard);
+        setHazard(hazard);
         setDates(executionDate, expirationDate);
         setIdentifier(identifier);
+        setTemperature(temperature);
         this.firstTimePrint = firstTimePrint;
         generateBarcode();
+    }
+
+    public void setTemperature(Double temperature) throws TemperatureException {
+        TemperatureValidator.validateRange(temperature, "Temperature");
+        this.temperature = temperature;
+    }
+
+    public Double getTemperature() {
+        return temperature;
     }
 
     private void setDates(LocalDate executionDate, LocalDate expirationDate) {
@@ -73,12 +86,12 @@ public class Sample implements Serializable {
         this.description = description;
     }
 
-    public HazardTypes isDangerous() {
+    public HazardTypes getHazard() {
         return hazard;
     }
 
-    public void setDangerous(HazardTypes dangerous) {
-        this.hazard = dangerous;
+    public void setHazard(HazardTypes hazard) {
+        this.hazard = hazard;
     }
 
     public LocalDate getExecutionDate() {
