@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ import org.sample_manager.Util.Exceptions.TemperatureException;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -96,10 +98,9 @@ public class SampleListGUIController {
         grid.setVgap(10);
 
         TextField descriptionField = new TextField();
-
-        ChoiceBox<HazardTypes> isDangerousField = new ChoiceBox<>();
-        isDangerousField.getItems().addAll(HazardTypes.values());
-        isDangerousField.setValue(HazardTypes.NONE);
+        ChoiceBox<HazardTypes> hazardField = new ChoiceBox<>();
+        hazardField.getItems().addAll(HazardTypes.values());
+        hazardField.setValue(HazardTypes.NONE);
 
         DatePicker executionDatePicker = new DatePicker();
         DatePicker expirationDatePicker = new DatePicker();
@@ -113,7 +114,7 @@ public class SampleListGUIController {
         grid.add(new Label("Description:"), 0, 0);
         grid.add(descriptionField, 1, 0);
         grid.add(new Label("Hazard Type:"), 0, 1);
-        grid.add(isDangerousField, 1, 1);
+        grid.add(hazardField, 1, 1);
         grid.add(new Label("Execution Date:"), 0, 2);
         grid.add(executionDatePicker, 1, 2);
         grid.add(new Label("Expiration Date:"), 0, 3);
@@ -125,11 +126,19 @@ public class SampleListGUIController {
 
         dialog.getDialogPane().setContent(grid);
 
-        // Button reference
         Button createButton = (Button) dialog.getDialogPane().lookupButton(createButtonType);
-        createButton.setDisable(true); // Initially disable the create button
+        createButton.setDisable(true);
 
-        // Identifier validation
+        ChangeListener<String> commonListener = (observable, oldValue, newValue) -> {
+            validateForm(createButton, descriptionField, hazardField, executionDatePicker, expirationDatePicker, identifierField, temperatureField);
+        };
+
+        descriptionField.textProperty().addListener(commonListener);
+        identifierField.textProperty().addListener(commonListener);
+        temperatureField.textProperty().addListener(commonListener);
+        executionDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> validateForm(createButton, descriptionField, hazardField, executionDatePicker, expirationDatePicker, identifierField, temperatureField));
+        expirationDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> validateForm(createButton, descriptionField, hazardField, executionDatePicker, expirationDatePicker, identifierField, temperatureField));
+
         identifierField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 20) {
                 identifierField.setText(oldValue);
@@ -140,54 +149,51 @@ public class SampleListGUIController {
                     identifierField.setStyle("-fx-border-color: red;");
                 }
             }
-            validateForm(createButton, identifierField, temperatureField);
+            validateForm(createButton, descriptionField, hazardField, executionDatePicker, expirationDatePicker, identifierField, temperatureField);
         });
 
-        // Temperature validation
         temperatureField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (isDouble(newValue)) {
                 temperatureField.setStyle("");
             } else {
                 temperatureField.setStyle("-fx-border-color: red;");
             }
-            validateForm(createButton, identifierField, temperatureField);
+            validateForm(createButton, descriptionField, hazardField, executionDatePicker, expirationDatePicker, identifierField, temperatureField);
         });
 
-        dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
-            @Override
-            public SampleDTO call(ButtonType dialogButton) {
-                if (dialogButton == createButtonType) {
-                    String description = descriptionField.getText();
-                    HazardTypes isDangerous = isDangerousField.getValue();
-                    LocalDate executionDate = executionDatePicker.getValue();
-                    LocalDate expirationDate = expirationDatePicker.getValue();
-                    String identifier = identifierField.getText();
-                    double temperature = Double.parseDouble(temperatureField.getText());
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == createButtonType) {
+                String description = descriptionField.getText();
+                HazardTypes isDangerous = hazardField.getValue();
+                LocalDate executionDate = executionDatePicker.getValue();
+                LocalDate expirationDate = expirationDatePicker.getValue();
+                String identifier = identifierField.getText();
+                double temperature = Double.parseDouble(temperatureField.getText());
 
-                    // Create the new sample and return
-                    SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier, temperature);
-                    try {
-                        controller.create(newSample.description, newSample.hazard, newSample.executionDate, newSample.expirationDate, newSample.identifier, newSample.temperature);
-                    } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return newSample;
+                SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier, temperature);
+                try {
+                    controller.create(newSample.description, newSample.hazard, newSample.executionDate, newSample.expirationDate, newSample.identifier, newSample.temperature);
+                } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
+                    throw new RuntimeException(e);
                 }
-                return null;
+                return newSample;
             }
+            return null;
         });
 
         dialog.showAndWait().ifPresent(sampleDTO -> updateTableView());
     }
 
     private boolean isIdentifierValid(String identifier) {
-        if (identifier.length() > 20) {
+        if (identifier.length() > 20 || identifier.isEmpty()) {
             return false;
         }
         String normalized = Normalizer.normalize(identifier, Normalizer.Form.NFD);
-        Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
-        String withoutAccents = pattern.matcher(normalized).replaceAll("");
-        return identifier.equals(withoutAccents);
+        Pattern accentPattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+        String withoutAccents = accentPattern.matcher(normalized).replaceAll("");
+        Pattern symbolPattern = Pattern.compile("[~^\\-.,]");
+        Matcher matcher = symbolPattern.matcher(identifier);
+        return !matcher.find() && identifier.equals(withoutAccents);
     }
 
     private boolean isDouble(String value) {
@@ -199,12 +205,24 @@ public class SampleListGUIController {
         }
     }
 
-    private void validateForm(Button createButton, TextField identifierField, TextField temperatureField) {
+    private void validateForm(Button createButton, TextField descriptionField, ChoiceBox<HazardTypes> hazard, DatePicker executionDatePicker, DatePicker expirationDatePicker, TextField identifierField, TextField tempField) {
+        boolean isDescriptionValid = !descriptionField.getText().trim().isEmpty();
+        boolean isExecutionDateValid = executionDatePicker.getValue() != null;
+        boolean isExpirationDateValid = expirationDatePicker.getValue() != null;
         boolean isIdentifierValid = isIdentifierValid(identifierField.getText());
-        boolean isTemperatureValid = isDouble(temperatureField.getText());
-        createButton.setDisable(!(isIdentifierValid && isTemperatureValid));
+        boolean isTemperatureValid = isDouble(tempField.getText()) && !tempField.getText().isEmpty();
+
+        createButton.setDisable(!(isDescriptionValid && isExecutionDateValid && isExpirationDateValid && isIdentifierValid && isTemperatureValid));
     }
 
+    private void validateFormProprertiesView(Button createButton, TextField descriptionField, ChoiceBox<HazardTypes> hazard, DatePicker executionDatePicker, DatePicker expirationDatePicker, TextField tempField) {
+        boolean isDescriptionValid = !descriptionField.getText().trim().isEmpty();
+        boolean isExecutionDateValid = executionDatePicker.getValue() != null;
+        boolean isExpirationDateValid = expirationDatePicker.getValue() != null;
+        boolean isTemperatureValid = isDouble(tempField.getText()) && !tempField.getText().isEmpty();
+
+        createButton.setDisable(!(isDescriptionValid && isExecutionDateValid && isExpirationDateValid && isTemperatureValid));
+    }
 
     @FXML
     void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException {
@@ -223,6 +241,8 @@ public class SampleListGUIController {
 
             ButtonType saveButtonType = new ButtonType("Save", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(saveButtonType, ButtonType.CANCEL);
+            Button save = (Button) dialog.getDialogPane().lookupButton(saveButtonType);
+
 
             GridPane grid = new GridPane();
             grid.setHgap(10);
@@ -256,6 +276,25 @@ public class SampleListGUIController {
             grid.add(infoLabel, 0, 5);
 
             dialog.getDialogPane().setContent(grid);
+
+            ChangeListener<String> commonListener = (observable, oldValue, newValue) -> {
+                validateFormProprertiesView(save, descriptionField, hazardField, executionDatePicker, expirationDatePicker, temperatureField);
+            };
+
+            descriptionField.textProperty().addListener(commonListener);
+            temperatureField.textProperty().addListener(commonListener);
+            executionDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> validateFormProprertiesView(save, descriptionField, hazardField, executionDatePicker, expirationDatePicker, temperatureField));
+            expirationDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> validateFormProprertiesView(save, descriptionField, hazardField, executionDatePicker, expirationDatePicker, temperatureField));
+
+
+            temperatureField.textProperty().addListener((observable, oldValue, newValue) -> {
+                if (isDouble(newValue)) {
+                    temperatureField.setStyle("");
+                } else {
+                    temperatureField.setStyle("-fx-border-color: red;");
+                }
+                validateFormProprertiesView(save, descriptionField, hazardField, executionDatePicker, expirationDatePicker, temperatureField);
+            });
 
             dialog.setResultConverter(new Callback<ButtonType, SampleDTO>() {
                 @Override

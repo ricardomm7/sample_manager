@@ -60,13 +60,14 @@ public class SampleRepository implements Serializable {
         return new ArrayList<>(sampleList);
     }
 
-    public void updateSample(Sample g) throws EmptyStringException {
+    public void updateSample(Sample g) throws EmptyStringException, TemperatureException {
         for (Sample s : sampleList) {
             if (g.getBarcode() == s.getBarcode()) {
                 s.setDescription(g.getDescription());
                 s.setHazard(g.getHazard());
                 s.setExecutionDate(g.getExecutionDate());
                 s.setExpirationDate(g.getExpirationDate());
+                s.setTemperature(g.getTemperature());
             }
         }
     }
