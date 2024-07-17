@@ -1,4 +1,4 @@
-![Cover](images/mainreadme-cover.svg)
+![Cover](docs/mainreadme-cover.svg)
 # Sample Manager
 
 Sample Manager is a Java program designed to streamline the cataloging process of samples stored in refrigerators (or not), with built-in barcode generation for efficient tracking.

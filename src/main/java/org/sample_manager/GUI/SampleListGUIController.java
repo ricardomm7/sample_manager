@@ -15,6 +15,7 @@ import javafx.util.Callback;
 import org.sample_manager.Controller.SampleController;
 import org.sample_manager.DTO.SampleDTO;
 import org.sample_manager.Domain.HazardTypes;
+import org.sample_manager.Util.Exceptions.DateException;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
 import org.sample_manager.Util.Exceptions.TemperatureException;
@@ -173,7 +174,7 @@ public class SampleListGUIController {
                 SampleDTO newSample = new SampleDTO(description, hazard, executionDate, expirationDate, true, identifier, temperature);
                 try {
                     controller.create(newSample.description, newSample.hazard, newSample.executionDate, newSample.expirationDate, newSample.identifier, newSample.temperature);
-                } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
+                } catch (EmptyStringException | SymbolsStringException | TemperatureException | DateException e) {
                     throw new RuntimeException(e);
                 }
                 return newSample;
@@ -225,7 +226,7 @@ public class SampleListGUIController {
     }
 
     @FXML
-    void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException {
+    void printBarcHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException, DateException {
         SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
         if (selectedSample != null) {
             controller.printBarc(selectedSample);
@@ -316,7 +317,8 @@ public class SampleListGUIController {
                         // Save changes to the controller
                         try {
                             controller.update(selectedSample);
-                        } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
+                        } catch (EmptyStringException | SymbolsStringException | TemperatureException |
+                                 DateException e) {
                             throw new RuntimeException(e);
                         }
                         return selectedSample;
@@ -330,7 +332,7 @@ public class SampleListGUIController {
     }
 
     @FXML
-    void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException {
+    void removeBtnHandler(ActionEvent event) throws EmptyStringException, SymbolsStringException, TemperatureException, DateException {
         SampleDTO selectedSample = sampleTableView.getSelectionModel().getSelectedItem();
         if (selectedSample != null) {
             controller.remove(selectedSample);

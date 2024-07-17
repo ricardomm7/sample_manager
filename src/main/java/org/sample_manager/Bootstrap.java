@@ -4,6 +4,7 @@ import org.sample_manager.Controller.SampleController;
 import org.sample_manager.Domain.HazardTypes;
 import org.sample_manager.Domain.Repositories;
 import org.sample_manager.GUI.Alert;
+import org.sample_manager.Util.Exceptions.DateException;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
 import org.sample_manager.Util.Exceptions.TemperatureException;
@@ -46,12 +47,12 @@ public class Bootstrap implements Runnable {
     public void run() {
         try {
             addSampleSamples();
-        } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
+        } catch (EmptyStringException | SymbolsStringException | TemperatureException | DateException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void addSampleSamples() throws EmptyStringException, SymbolsStringException, TemperatureException {
+    private void addSampleSamples() throws EmptyStringException, SymbolsStringException, TemperatureException, DateException {
         SampleController c1 = new SampleController();
         c1.create("Alcohol", HazardTypes.BIOLOGICAL, LocalDate.of(2024, 06, 13), LocalDate.of(2029, 05, 20), "Ana Magalhaes Pimenta", 12.0);
         c1.create("Acetone", HazardTypes.CHEMICAL, LocalDate.of(2023, 02, 15), LocalDate.of(2026, 01, 25), "Carlos Santos Oliveira", 0.0);

@@ -1,6 +1,7 @@
 package org.sample_manager.DTO;
 
 import org.sample_manager.Domain.Sample;
+import org.sample_manager.Util.Exceptions.DateException;
 import org.sample_manager.Util.Exceptions.EmptyStringException;
 import org.sample_manager.Util.Exceptions.SymbolsStringException;
 import org.sample_manager.Util.Exceptions.TemperatureException;
@@ -14,7 +15,7 @@ public class SampleMapper {
         return new SampleDTO(o.getDescription(), o.getHazard(), o.getExecutionDate(), o.getExpirationDate(), o.getBarcode(), o.getIdentifier(), o.getFirstTimePrint(), o.getTemperature());
     }
 
-    public static Sample toDomain(SampleDTO i) throws EmptyStringException, SymbolsStringException, TemperatureException {
+    public static Sample toDomain(SampleDTO i) throws EmptyStringException, SymbolsStringException, TemperatureException, DateException {
         Sample s1 = new Sample(i.description, i.hazard, i.executionDate, i.expirationDate, i.firstTimePrint, i.identifier, i.temperature);
         if (i.barcode != null) {
             s1.setBarcode(i.barcode);
