@@ -24,6 +24,8 @@ Sample Manager is a Java program designed to streamline the cataloging process o
 ## Bugs & Opinion
 If you encounter any bugs or issues with the program, please notify me. Your feedback is invaluable in improving Sample Manager.
 
+You can also visit the [User Manual](docs/manual.md) for further clarification.
+
 ## Dependencies
 
 - [ZXing](https://github.com/zxing/zxing): Library for barcode generation.
