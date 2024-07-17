@@ -26,7 +26,7 @@ public class SampleMapper {
     public static List<SampleDTO> toDTOList(List<Sample> i) {
         List<SampleDTO> z = new ArrayList<>();
         for (Sample y : i) {
-            z.add(new SampleDTO(y.getDescription(), y.getHazard(), y.getExecutionDate(), y.getExpirationDate(), y.getBarcode(), y.getIdentifier(), y.getFirstTimePrint(), y.getTemperature()));
+            z.add(toDTO(y));
         }
         return z;
     }

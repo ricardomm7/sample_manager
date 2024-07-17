@@ -164,13 +164,13 @@ public class SampleListGUIController {
         dialog.setResultConverter(dialogButton -> {
             if (dialogButton == createButtonType) {
                 String description = descriptionField.getText();
-                HazardTypes isDangerous = hazardField.getValue();
+                HazardTypes hazard = hazardField.getValue();
                 LocalDate executionDate = executionDatePicker.getValue();
                 LocalDate expirationDate = expirationDatePicker.getValue();
                 String identifier = identifierField.getText();
                 double temperature = Double.parseDouble(temperatureField.getText());
 
-                SampleDTO newSample = new SampleDTO(description, isDangerous, executionDate, expirationDate, true, identifier, temperature);
+                SampleDTO newSample = new SampleDTO(description, hazard, executionDate, expirationDate, true, identifier, temperature);
                 try {
                     controller.create(newSample.description, newSample.hazard, newSample.executionDate, newSample.expirationDate, newSample.identifier, newSample.temperature);
                 } catch (EmptyStringException | SymbolsStringException | TemperatureException e) {
