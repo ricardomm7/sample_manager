@@ -24,9 +24,31 @@ Generate unique barcodes for each sample, facilitating quick identification and 
 1. After clicking on the sample you want to print the barcode on, click on the “Edit” tab and the “Print barcode” option.
 
 ## Update a Sample
+Easily update the details of an existing sample.
+
+### How to Update a Sample:
+1. Select the sample you want to update from the table.
+2. Click the "Properties" option available on the "Edit" tab.
+3. Modify the sample details in the dialog:
+   - Description: Update the description if needed.
+   - Hazard Type: Change the hazard type if required.
+   - Execution Date: Update the execution date if it has changed.
+   - Expiration Date: Adjust the expiration date if necessary.
+   - Temperature: Modify the storage temperature if needed.
+4. Click "Save" to update the sample details.
 
 ## Remove a Sample
+Efficiently remove a sample from the catalog.
+
+### How to Remove a Sample:
+1. Select the sample you want to remove from the table.
+2. Click the "Remove" button.
 
 ## Column configuration
+Customize the display of sample attributes for easy viewing and sorting.
 
-## Edit Sample info
+### How to Configure Columns:
+1. Each attribute of the sample (Description, Hazard Type, Execution Date, Expiration Date, Identifier, and Barcode) is displayed in its own column within the table.
+2. Click on a column header to sort the samples by that attribute.
+3. To resize a column, drag the column header boundary.
+4. To reorder columns, drag and drop the column header to the desired position.
