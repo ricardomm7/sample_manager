@@ -75,7 +75,25 @@ public class SampleListGUIController {
         removeMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
         printBarcMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
         propertiesMenuItem.disableProperty().bind(Bindings.isEmpty(sampleTableView.getSelectionModel().getSelectedItems()));
+
+        // Adiciona a funcionalidade para colorir a linha inteira de vermelho se a data de validade for anterior a hoje
+        sampleTableView.setRowFactory(tv -> new TableRow<SampleDTO>() {
+            @Override
+            protected void updateItem(SampleDTO item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
+                } else {
+                    if (item.expirationDate.isBefore(LocalDate.now())) {
+                        setStyle("-fx-background-color: #FF9494;");
+                    } else {
+                        setStyle("");
+                    }
+                }
+            }
+        });
     }
+
 
     private void setupTableColumns() {
         executionColumn.setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue().executionDate));
