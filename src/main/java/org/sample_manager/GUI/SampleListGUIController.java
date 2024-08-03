@@ -385,7 +385,7 @@ public class SampleListGUIController {
 
     @FXML
     void aboutMenuHandler(ActionEvent event) {
-        Alert.information("About", "You're on version v0.1 (Beta), of Sample Manager.\n@ricardomm7", "About Sample Manager");
+        Alert.information("About", "You're on version v0.1, of Sample Manager.\n@ricardomm7", "About Sample Manager");
     }
 
     @FXML

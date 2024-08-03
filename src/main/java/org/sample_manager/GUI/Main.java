@@ -15,7 +15,7 @@ public class Main extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("samplelist-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Sample Manager - v0.1 (Beta)");
+        stage.setTitle("Sample Manager");
         stage.setScene(scene);
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icon.png"))));
         stage.show();
