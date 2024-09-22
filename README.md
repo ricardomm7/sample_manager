@@ -19,7 +19,7 @@ Sample Manager is a Java program designed to streamline the cataloging process o
 1. Clone the repository to your local machine.
 2. Open the project in your preferred Java IDE.
 3. Run the `Main` class to launch the application.
-4. Follow the on-screen instructions to start cataloging and managing samples, or visit the user-manual.
+4. Follow the on-screen instructions to start cataloging and managing samples, or visit the [user manual](docs/manual.md).
 
 ## Bugs & Opinion
 If you encounter any bugs or issues with the program, please notify me. Your feedback is invaluable in improving Sample Manager.
